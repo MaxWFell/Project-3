@@ -79,26 +79,34 @@ function cart() {
 
     const checkout = async () => {
         // send post request to /api/cart
-        const res = await fetch("/api/cart", {
+        // const res = await fetch("/api/cart", {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify({
+        //         operation: "checkout",
+        //         user_id: user.id,
+        //         data: {
+        //         },
+        //     }),
+        // });
+
+        const res = await fetch("/api/checkout_session", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                operation: "checkout",
                 user_id: user.id,
-                data: {
-                },
             }),
         });
 
         // get response
         const data = await res.json();
 
-        // if successful, remove product from cart
         if (data.success) {
-            toastr.success("Successfully checked out");
-            setCheckedOut(true);
+            window.location.href = data.url;
         }
 
         // if failed, show error

@@ -9,10 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@stripe/stripe-js": "^1.52.1",
     "mongodb": "^5.2.0",
-    "next": "13.3.0",
+    "next": "^13.3.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "stripe": "^12.1.1",
     "toastr": "^2.1.4"
   }
 }
