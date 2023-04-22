@@ -3,7 +3,8 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/products": "pages/products.js",
-  "/cart": "pages/cart.js",
+  "/logout": "pages/logout.js",
+  "/login": "pages/login.js",
   "/api/cart": "pages/api/cart.js",
-  "/api/checkout_session": "pages/api/checkout_session.js"
+  "/cart": "pages/cart.js"
 }
