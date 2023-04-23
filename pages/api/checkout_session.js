@@ -6,6 +6,12 @@ export default async function handler(req, res) {
     // get db
     const client = await connectDatabase();
 
+    let host = req.headers.host;
+    let protocol = 'http';
+    if (host.indexOf('localhost') === -1) {
+        protocol = 'https';
+    }
+
     const { user_id } = req.body;
 
     // get db
@@ -22,8 +28,6 @@ export default async function handler(req, res) {
             let pPrice = product.price.toFixed(2);
             pPrice = pPrice.replace('.', '');
             pPrice = parseInt(pPrice);
-
-            console.log(`http://localhost:3000${product.image_file}`);
 
             const line_item = {
 
@@ -70,8 +74,8 @@ export default async function handler(req, res) {
                 ],
                 line_items: line_items,
                 mode: 'payment',
-                success_url: `http://localhost:3000/checkout`,
-                cancel_url: `http://localhost:3000/cart`,
+                success_url: `${protocol}://${host}/checkout`,
+                cancel_url: `${protocol}://${host}/cart`,
             });
 
             res.status(200).json({ success: true, url: session.url });
