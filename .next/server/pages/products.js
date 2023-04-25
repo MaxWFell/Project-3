@@ -1,702 +1,105 @@
 "use strict";
+/*
+ * ATTENTION: An "eval-source-map" devtool has been used.
+ * This devtool is neither made for production nor for readable output files.
+ * It uses "eval()" calls to create a separate source file with attached SourceMaps in the browser devtools.
+ * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
+ * or disable the default devtool with "devtool: false".
+ * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
+ */
 (() => {
 var exports = {};
-exports.id = 345;
-exports.ids = [345];
+exports.id = "pages/products";
+exports.ids = ["pages/products"];
 exports.modules = {
 
-/***/ 1588:
+/***/ "./components/Product.js":
+/*!*******************************!*\
+  !*** ./components/Product.js ***!
+  \*******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-// ESM COMPAT FLAG
-__webpack_require__.r(__webpack_exports__);
-
-// EXPORTS
-__webpack_require__.d(__webpack_exports__, {
-  "default": () => (/* binding */ pages_products),
-  "getServerSideProps": () => (/* binding */ getServerSideProps)
-});
-
-// EXTERNAL MODULE: external "react/jsx-runtime"
-var jsx_runtime_ = __webpack_require__(997);
-;// CONCATENATED MODULE: ./components/Product.js
-
-function Product({ product , addToCart , addToWishlist  }) {
-    return /*#__PURE__*/ jsx_runtime_.jsx(jsx_runtime_.Fragment, {
-        children: /*#__PURE__*/ jsx_runtime_.jsx("div", {
-            className: "card p-4 my-3",
-            children: /*#__PURE__*/ (0,jsx_runtime_.jsxs)("div", {
-                className: "row",
-                children: [
-                    /*#__PURE__*/ jsx_runtime_.jsx("div", {
-                        className: "col-md-3",
-                        children: /*#__PURE__*/ jsx_runtime_.jsx("img", {
-                            src: product.image,
-                            className: "img-fluid"
-                        })
-                    }),
-                    /*#__PURE__*/ (0,jsx_runtime_.jsxs)("div", {
-                        className: "col-md-6",
-                        children: [
-                            /*#__PURE__*/ jsx_runtime_.jsx("h4", {
-                                className: "font-weight-bold",
-                                children: product.name
-                            }),
-                            /*#__PURE__*/ jsx_runtime_.jsx("p", {
-                                className: "text-muted",
-                                children: product.description
-                            }),
-                            /*#__PURE__*/ (0,jsx_runtime_.jsxs)("p", {
-                                className: "text-muted text-secondary",
-                                children: [
-                                    "Best for ",
-                                    product.age_preferred,
-                                    " year old pets"
-                                ]
-                            }),
-                            /*#__PURE__*/ (0,jsx_runtime_.jsxs)("p", {
-                                className: "text-muted",
-                                children: [
-                                    product.quantity,
-                                    " in stock"
-                                ]
-                            })
-                        ]
-                    }),
-                    /*#__PURE__*/ (0,jsx_runtime_.jsxs)("div", {
-                        className: "col-md-3",
-                        children: [
-                            /*#__PURE__*/ jsx_runtime_.jsx("h3", {
-                                className: "font-weight-bold text-success",
-                                children: "$20.00"
-                            }),
-                            /*#__PURE__*/ jsx_runtime_.jsx("button", {
-                                className: "btn btn-dark btn-block",
-                                onClick: ()=>addToCart(product.id),
-                                children: "Add to Cart"
-                            }),
-                            /*#__PURE__*/ jsx_runtime_.jsx("button", {
-                                className: "btn btn-outline-info btn-block",
-                                onClick: ()=>addToWishlist(product.id),
-                                children: "Add to Wishlist"
-                            })
-                        ]
-                    })
-                ]
-            })
-        })
-    });
-}
-/* harmony default export */ const components_Product = (Product);
-
-// EXTERNAL MODULE: external "mongodb"
-var external_mongodb_ = __webpack_require__(8013);
-;// CONCATENATED MODULE: ./db/db.js
-
-const MongoClient = (__webpack_require__(8013).MongoClient);
-const seedproducts = __webpack_require__(9125);
-// const ObjectID = require('mongodb').ObjectID;
-// get mongo client
-async function connectDatabase() {
-    const client = await MongoClient.connect(process.env.MONGODB_URI);
-    return client;
-}
-async function ensureCollections(client) {
-    // list of collections to ensure
-    const collections = [
-        "users",
-        "products",
-        "orders",
-        "seeds",
-        "cart",
-        "wishlist",
-        "users_pets"
-    ];
-    // get db
-    const db = client.db();
-    // ensure collections
-    for (const collection of collections){
-        // check if collection exists
-        const exists = await db.listCollections({
-            name: collection
-        }).hasNext();
-        // if not, create it
-        if (!exists) {
-            await db.createCollection(collection);
-        }
-    }
-    // get seed: products_seed
-    const seed = await getSeed(db, "products_seed");
-    // if seed doesn't exist, insert it
-    if (!seed) {
-        // seed products
-        await seedProducts(db, seedproducts);
-        // create indexes: products -> name
-        await db.collection("products").createIndex({
-            name: "text"
-        });
-        // insert seed
-        await insertSeed(db, {
-            name: "products_seed",
-            date: new Date()
-        });
-    }
-}
-// insert pet
-async function insertPet(db, pet) {
-    // get pets collection
-    const pets = db.collection("users_pets");
-    // insert pet
-    const result = await pets.insertOne(pet);
-    return result;
-}
-// get pet by id
-async function getPet(db, id) {
-    const collection = db.collection("users_pets");
-    const pet = await collection.findOne({
-        _id: new ObjectId(id)
-    });
-    return pet;
-}
-// get pets by user id
-async function getPets(db, user_id) {
-    const collection = db.collection("users_pets");
-    const pets = await collection.find({
-        user_id
-    }).toArray();
-    return pets;
-}
-// delete pet by id
-async function deletePet(db, id) {
-    const collection = db.collection("users_pets");
-    const result = await collection.deleteOne({
-        _id: new ObjectId(id)
-    });
-    return result;
-}
-// insert user: name, email, password
-async function insertUser(db, user) {
-    // get users collection
-    const users = db.collection("users");
-    // insert user
-    const result = await users.insertOne(user);
-    return result;
-}
-// get user by email
-async function getUser(db, email) {
-    const collection = db.collection("users");
-    const result = await collection.findOne({
-        email
-    });
-    return result;
-}
-// validate login
-async function validateLogin(db, email, password) {
-    // get user
-    const user = await getUser(db, email);
-    // if user exists, check password
-    if (user) {
-        return user.password === password;
-    }
-    // user doesn't exist
-    return false;
-}
-// insert seed: name, date run
-async function insertSeed(db, seed) {
-    // get seeds collection
-    const seeds = db.collection("seeds");
-    // insert seed
-    const result = await seeds.insertOne(seed);
-    return result;
-}
-// get seed by name
-async function getSeed(db, name) {
-    const collection = db.collection("seeds");
-    const seed = await collection.findOne({
-        name
-    });
-    return seed;
-}
-// seed products
-async function seedProducts(db, prods) {
-    // get products collection
-    const products = db.collection("products");
-    // insert products
-    const result = await products.insertMany(prods);
-    return result;
-}
-// get products
-async function getProducts(db, filter) {
-    const collection = db.collection("products");
-    const products = await collection.find(filter).toArray();
-    return products;
-}
-// get product by id
-async function getProduct(db, id) {
-    const collection = db.collection("products");
-    const product = await collection.findOne({
-        _id: new ObjectId(id)
-    });
-    return product;
-}
-// search products
-async function searchProducts(db, query) {
-    const collection = db.collection("products");
-    const products = await collection.find({
-        $text: {
-            $search: query
-        }
-    }).toArray();
-    return products;
-}
-// get a users cart
-async function getCart(db, user_id) {
-    const collection = db.collection("cart");
-    const cart = await collection.findOne({
-        user_id
-    });
-    // if cart exists, return it
-    if (cart) {
-        return cart;
-    } else {
-        // if cart doesn't exist, create it
-        const newCart = {
-            user_id,
-            products: []
-        };
-        // insert new cart
-        await collection.insertOne(newCart);
-        return newCart;
-    }
-}
-// add product to cart
-async function addToCart(db, user_id, product_id) {
-    // get cart
-    const cart = await getCart(db, user_id);
-    // get cart products
-    const products = cart.products;
-    // if product is already in cart, increment quantity
-    const index = products.findIndex((product)=>product.product_id === product_id);
-    if (index !== -1) {
-        products[index].quantity++;
-    } else {
-        // if product is not in cart, add it
-        products.push({
-            product_id,
-            quantity: 1
-        });
-    }
-    // update cart
-    const collection = db.collection("cart");
-    const result = await collection.updateOne({
-        user_id
-    }, {
-        $set: {
-            products
-        }
-    });
-    return result;
-}
-// remove product from cart
-async function removeFromCart(db, user_id, product_id) {
-    // get cart
-    const cart = await getCart(db, user_id);
-    // get cart products
-    const products = cart.products;
-    // if product is in cart, remove it
-    const index = products.findIndex((product)=>product.product_id === product_id);
-    if (index !== -1) {
-        products.splice(index, 1);
-        // update cart
-        const collection = db.collection("cart");
-        const result = await collection.updateOne({
-            user_id
-        }, {
-            $set: {
-                products
-            }
-        });
-        console.log(result);
-        return result;
-    }
-    return null;
-}
-// clear cart
-async function clearCart(db, user_id) {
-    // get cart
-    const cart = await getCart(db, user_id);
-    // get cart products
-    const products = cart.products;
-    // if cart has products, remove them
-    if (products.length > 0) {
-        // update cart
-        const collection = db.collection("cart");
-        const result = await collection.updateOne({
-            user_id
-        }, {
-            $set: {
-                products: []
-            }
-        });
-        return result;
-    }
-    return null;
-}
-// get a users wishlist
-async function getWishlist(db, user_id) {
-    const collection = db.collection("wishlist");
-    // get wishlist
-    const list = await collection.findOne({
-        user_id
-    });
-    // if wishlist exists, return it
-    if (list) {
-        return list;
-    } else {
-        // if wishlist doesn't exist, create it
-        const newList = {
-            user_id,
-            products: []
-        };
-        // insert new wishlist
-        await collection.insertOne(newList);
-        return newList;
-    }
-}
-// add product to wishlist
-async function addToWishlist(db, user_id, product_id) {
-    // get wishlist
-    const list = await getWishlist(db, user_id);
-    // get wishlist products
-    const products = list.products;
-    // if product is already in wishlist, do nothing
-    const index = products.findIndex((product)=>product.product_id === product_id);
-    if (index === -1) {
-        // if product is not in wishlist, add it
-        products.push({
-            product_id
-        });
-        // update wishlist
-        const collection = db.collection("wishlist");
-        const result = await collection.updateOne({
-            user_id
-        }, {
-            $set: {
-                products
-            }
-        });
-        return result;
-    }
-    return null;
-}
-// remove product from wishlist
-async function removeFromWishlist(db, user_id, product_id) {
-    // get wishlist
-    const list = await getWishlist(db, user_id);
-    // get wishlist products
-    const products = list.products;
-    // if product is in wishlist, remove it
-    const index = products.findIndex((product)=>product.product_id === product_id);
-    if (index !== -1) {
-        products.splice(index, 1);
-        // update wishlist
-        const collection = db.collection("wishlist");
-        const result = await collection.updateOne({
-            user_id
-        }, {
-            $set: {
-                products
-            }
-        });
-        return result;
-    }
-    return null;
-}
-// clear wishlist
-async function clearWishlist(db, user_id) {
-    // get wishlist
-    const list = await getWishlist(db, user_id);
-    // get wishlist products
-    const products = list.products;
-    // if wishlist has products, remove them
-    if (products.length > 0) {
-        // update wishlist
-        const collection = db.collection("wishlist");
-        const result = await collection.updateOne({
-            user_id
-        }, {
-            $set: {
-                products: []
-            }
-        });
-        return result;
-    }
-    return null;
-}
-// get a users orders
-async function getOrders(db, user_id) {
-    const collection = db.collection("orders");
-    // get orders: order by date, newest first
-    const orders = await collection.find({
-        user_id
-    }).sort({
-        date: -1
-    }).toArray();
-    return orders;
-}
-// add order
-async function addOrder(db, order) {
-    // get orders collection
-    const orders = db.collection("orders");
-    // insert order
-    const result = await orders.insertOne(order);
-    return result;
-}
-// delete order
-async function deleteOrder(db, order_id) {
-    // get orders collection
-    const orders = db.collection("orders");
-    // delete order
-    const result = await orders.deleteOne({
-        _id: new ObjectId(order_id)
-    });
-    return result;
-}
-
-
-// EXTERNAL MODULE: external "react"
-var external_react_ = __webpack_require__(6689);
-// EXTERNAL MODULE: external "toastr"
-var external_toastr_ = __webpack_require__(4559);
-var external_toastr_default = /*#__PURE__*/__webpack_require__.n(external_toastr_);
-// EXTERNAL MODULE: external "next/router"
-var router_ = __webpack_require__(1853);
-;// CONCATENATED MODULE: ./pages/products.js
-
-
-
-
-
-
-function products({ products  }) {
-    const router = (0,router_.useRouter)();
-    const [user, setUser] = (0,external_react_.useState)(null);
-    // loader
-    const [loading, setLoading] = (0,external_react_.useState)(true);
-    const [hasParams, setHasParams] = (0,external_react_.useState)(false);
-    // check if user is logged in, local storage
-    (0,external_react_.useEffect)(()=>{
-        const user = JSON.parse(localStorage.getItem("user"));
-        // if user is logged in, show profile
-        if (user) {
-            setUser(user);
-            setLoading(false);
-            // check if query params exist
-            if (router.query && router.query.q) {
-                setHasParams(true);
-            } else {
-                setHasParams(false);
-            }
-        } else {
-            // redirect to login page
-            window.location.href = "/login";
-        }
-    }, []);
-    // add product to cart
-    const addToCart = async (product)=>{
-        // send post request to /api/cart
-        const res = await fetch("/api/cart", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                operation: "add",
-                user_id: user.id,
-                data: {
-                    product
-                }
-            })
-        });
-        // get response
-        const data = await res.json();
-        // if successful, add product to cart
-        if (data.success) {
-            external_toastr_default().success("Successfully added to cart");
-        } else {
-            external_toastr_default().error("Failed to add to cart");
-        }
-    };
-    // add product to wishlist
-    const addToWishlist = async (product)=>{
-        // send post request to /api/wishlist
-        const res = await fetch("/api/wishlist", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                operation: "add",
-                user_id: user.id,
-                data: {
-                    product
-                }
-            })
-        });
-        // get response
-        const data = await res.json();
-        // if successful, add product to wishlist
-        if (data.success) {
-            external_toastr_default().success("Successfully added to wishlist");
-        } else {
-            external_toastr_default().error("Failed to add to wishlist");
-        }
-    };
-    return /*#__PURE__*/ jsx_runtime_.jsx(jsx_runtime_.Fragment, {
-        children: /*#__PURE__*/ jsx_runtime_.jsx("div", {
-            style: {
-                // linear gradient from #0073ff to #00c4ff
-                backgroundImage: "linear-gradient(90deg, #0073ff 0%, #00c4ff 100%)"
-            },
-            children: loading ? /*#__PURE__*/ jsx_runtime_.jsx("div", {
-                className: "py-5 text-center text-light",
-                children: /*#__PURE__*/ jsx_runtime_.jsx("p", {
-                    className: "display-4 font-weight-bold",
-                    children: "Loading products..."
-                })
-            }) : /*#__PURE__*/ (0,jsx_runtime_.jsxs)(jsx_runtime_.Fragment, {
-                children: [
-                    /*#__PURE__*/ (0,jsx_runtime_.jsxs)("div", {
-                        className: "container",
-                        children: [
-                            /*#__PURE__*/ (0,jsx_runtime_.jsxs)("div", {
-                                className: "clearfix",
-                                children: [
-                                    /*#__PURE__*/ jsx_runtime_.jsx("div", {
-                                        className: "float-left",
-                                        children: hasParams ? /*#__PURE__*/ (0,jsx_runtime_.jsxs)("h1", {
-                                            className: "py-4 text-light",
-                                            children: [
-                                                'Search results for "',
-                                                router.query.q,
-                                                '"'
-                                            ]
-                                        }) : /*#__PURE__*/ jsx_runtime_.jsx("h1", {
-                                            className: "py-4 text-light",
-                                            children: "Shop stuff for your pets!"
-                                        })
-                                    }),
-                                    /*#__PURE__*/ jsx_runtime_.jsx("div", {
-                                        className: "float-right",
-                                        children: /*#__PURE__*/ jsx_runtime_.jsx("a", {
-                                            href: "/cart",
-                                            className: "btn btn-lg btn-light mt-4",
-                                            children: "View cart"
-                                        })
-                                    })
-                                ]
-                            }),
-                            products.map((product)=>/*#__PURE__*/ jsx_runtime_.jsx("div", {
-                                    children: /*#__PURE__*/ jsx_runtime_.jsx(components_Product, {
-                                        product: product,
-                                        addToCart: addToCart,
-                                        addToWishlist: addToWishlist
-                                    })
-                                }, product.id))
-                        ]
-                    }),
-                    /*#__PURE__*/ jsx_runtime_.jsx("div", {
-                        className: "py-5"
-                    }),
-                    /*#__PURE__*/ jsx_runtime_.jsx("div", {
-                        className: "py-5"
-                    })
-                ]
-            })
-        })
-    });
-}
-// get server-side props
-async function getServerSideProps(context) {
-    // get db
-    const client = await connectDatabase();
-    // ensure collections exist
-    await ensureCollections(client);
-    // get db
-    const db = client.db();
-    let products = [];
-    // has query
-    if (context.query && context.query.q) {
-        // search by name
-        if (context.query.q) {
-            products = await searchProducts(db, context.query.q);
-        }
-    } else {
-        // get products
-        products = await getProducts(db, {});
-    }
-    const filteredProducts = products.map((product)=>{
-        return {
-            id: product._id.toString(),
-            name: product.name,
-            image: product.image_file,
-            price: product.price,
-            description: product.prod_description,
-            quantity: product.quantity,
-            age_preferred: product.age_preferred
-        };
-    });
-    // return products
-    return {
-        props: {
-            products: filteredProducts
-        }
-    };
-}
-/* harmony default export */ const pages_products = (products);
-
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ \"react/jsx-dev-runtime\");\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__);\n\nfunction Product({ product , addToCart , addToWishlist  }) {\n    return /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {\n        children: /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"div\", {\n            className: \"card p-4 my-3\",\n            children: /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"div\", {\n                className: \"row\",\n                children: [\n                    /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"div\", {\n                        className: \"col-md-3\",\n                        children: /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"img\", {\n                            src: product.image,\n                            className: \"img-fluid\"\n                        }, void 0, false, {\n                            fileName: \"C:\\\\Users\\\\badaw\\\\OneDrive\\\\Documents\\\\Top Foodies\\\\Project-3\\\\components\\\\Product.js\",\n                            lineNumber: 6,\n                            columnNumber: 21\n                        }, this)\n                    }, void 0, false, {\n                        fileName: \"C:\\\\Users\\\\badaw\\\\OneDrive\\\\Documents\\\\Top Foodies\\\\Project-3\\\\components\\\\Product.js\",\n                        lineNumber: 5,\n                        columnNumber: 17\n                    }, this),\n                    /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"div\", {\n                        className: \"col-md-6\",\n                        children: [\n                            /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"h4\", {\n                                className: \"font-weight-bold\",\n                                children: product.name\n                            }, void 0, false, {\n                                fileName: \"C:\\\\Users\\\\badaw\\\\OneDrive\\\\Documents\\\\Top Foodies\\\\Project-3\\\\components\\\\Product.js\",\n                                lineNumber: 9,\n                                columnNumber: 21\n                            }, this),\n                            /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"p\", {\n                                className: \"text-muted\",\n                                children: product.description\n                            }, void 0, false, {\n                                fileName: \"C:\\\\Users\\\\badaw\\\\OneDrive\\\\Documents\\\\Top Foodies\\\\Project-3\\\\components\\\\Product.js\",\n                                lineNumber: 10,\n                                columnNumber: 21\n                            }, this),\n                            /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"p\", {\n                                className: \"text-muted text-secondary\",\n                                children: [\n                                    \"Best for \",\n                                    product.age_preferred,\n                                    \" year old pets\"\n                                ]\n                            }, void 0, true, {\n                                fileName: \"C:\\\\Users\\\\badaw\\\\OneDrive\\\\Documents\\\\Top Foodies\\\\Project-3\\\\components\\\\Product.js\",\n                                lineNumber: 11,\n                                columnNumber: 21\n                            }, this),\n                            /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"p\", {\n                                className: \"text-muted\",\n                                children: [\n                                    product.quantity,\n                                    \" in stock\"\n                                ]\n                            }, void 0, true, {\n                                fileName: \"C:\\\\Users\\\\badaw\\\\OneDrive\\\\Documents\\\\Top Foodies\\\\Project-3\\\\components\\\\Product.js\",\n                                lineNumber: 12,\n                                columnNumber: 21\n                            }, this)\n                        ]\n                    }, void 0, true, {\n                        fileName: \"C:\\\\Users\\\\badaw\\\\OneDrive\\\\Documents\\\\Top Foodies\\\\Project-3\\\\components\\\\Product.js\",\n                        lineNumber: 8,\n                        columnNumber: 17\n                    }, this),\n                    /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"div\", {\n                        className: \"col-md-3\",\n                        children: [\n                            /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"h3\", {\n                                className: \"font-weight-bold text-success\",\n                                children: \"$20.00\"\n                            }, void 0, false, {\n                                fileName: \"C:\\\\Users\\\\badaw\\\\OneDrive\\\\Documents\\\\Top Foodies\\\\Project-3\\\\components\\\\Product.js\",\n                                lineNumber: 15,\n                                columnNumber: 21\n                            }, this),\n                            /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"button\", {\n                                className: \"btn btn-dark btn-block\",\n                                onClick: ()=>addToCart(product.id),\n                                children: \"Add to Cart\"\n                            }, void 0, false, {\n                                fileName: \"C:\\\\Users\\\\badaw\\\\OneDrive\\\\Documents\\\\Top Foodies\\\\Project-3\\\\components\\\\Product.js\",\n                                lineNumber: 16,\n                                columnNumber: 21\n                            }, this),\n                            /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"button\", {\n                                className: \"btn btn-outline-info btn-block\",\n                                onClick: ()=>addToWishlist(product.id),\n                                children: \"Add to Wishlist\"\n                            }, void 0, false, {\n                                fileName: \"C:\\\\Users\\\\badaw\\\\OneDrive\\\\Documents\\\\Top Foodies\\\\Project-3\\\\components\\\\Product.js\",\n                                lineNumber: 19,\n                                columnNumber: 21\n                            }, this)\n                        ]\n                    }, void 0, true, {\n                        fileName: \"C:\\\\Users\\\\badaw\\\\OneDrive\\\\Documents\\\\Top Foodies\\\\Project-3\\\\components\\\\Product.js\",\n                        lineNumber: 14,\n                        columnNumber: 17\n                    }, this)\n                ]\n            }, void 0, true, {\n                fileName: \"C:\\\\Users\\\\badaw\\\\OneDrive\\\\Documents\\\\Top Foodies\\\\Project-3\\\\components\\\\Product.js\",\n                lineNumber: 4,\n                columnNumber: 13\n            }, this)\n        }, void 0, false, {\n            fileName: \"C:\\\\Users\\\\badaw\\\\OneDrive\\\\Documents\\\\Top Foodies\\\\Project-3\\\\components\\\\Product.js\",\n            lineNumber: 3,\n            columnNumber: 9\n        }, this)\n    }, void 0, false);\n}\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Product);\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9jb21wb25lbnRzL1Byb2R1Y3QuanMuanMiLCJtYXBwaW5ncyI6Ijs7Ozs7OztBQUFBLFNBQVNBLFFBQVEsRUFBRUMsUUFBTyxFQUFFQyxVQUFTLEVBQUVDLGNBQWEsRUFBQyxFQUFFO0lBQ25ELHFCQUFRO2tCQUNKLDRFQUFDQztZQUFJQyxXQUFVO3NCQUNYLDRFQUFDRDtnQkFBSUMsV0FBVTs7a0NBQ1gsOERBQUNEO3dCQUFJQyxXQUFVO2tDQUNYLDRFQUFDQzs0QkFBSUMsS0FBS04sUUFBUU8sS0FBSzs0QkFBRUgsV0FBVTs7Ozs7Ozs7Ozs7a0NBRXZDLDhEQUFDRDt3QkFBSUMsV0FBVTs7MENBQ1gsOERBQUNJO2dDQUFHSixXQUFVOzBDQUFvQkosUUFBUVMsSUFBSTs7Ozs7OzBDQUM5Qyw4REFBQ0M7Z0NBQUVOLFdBQVU7MENBQWNKLFFBQVFXLFdBQVc7Ozs7OzswQ0FDOUMsOERBQUNEO2dDQUFFTixXQUFVOztvQ0FBNEI7b0NBQVVKLFFBQVFZLGFBQWE7b0NBQUM7Ozs7Ozs7MENBQ3pFLDhEQUFDRjtnQ0FBRU4sV0FBVTs7b0NBQWNKLFFBQVFhLFFBQVE7b0NBQUM7Ozs7Ozs7Ozs7Ozs7a0NBRWhELDhEQUFDVjt3QkFBSUMsV0FBVTs7MENBQ1gsOERBQUNVO2dDQUFHVixXQUFVOzBDQUFnQzs7Ozs7OzBDQUM5Qyw4REFBQ1c7Z0NBQU9YLFdBQVU7Z0NBQXlCWSxTQUFTLElBQU1mLFVBQVVELFFBQVFpQixFQUFFOzBDQUFHOzs7Ozs7MENBR2pGLDhEQUFDRjtnQ0FBT1gsV0FBVTtnQ0FBaUNZLFNBQVMsSUFBTWQsY0FBY0YsUUFBUWlCLEVBQUU7MENBQUc7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OztBQVNqSDtBQUVBLGlFQUFlbEIsT0FBT0EsRUFBQyIsInNvdXJjZXMiOlsid2VicGFjazovL3Bhd3NpdGl2ZWx5Ly4vY29tcG9uZW50cy9Qcm9kdWN0LmpzP2RhYjciXSwic291cmNlc0NvbnRlbnQiOlsiZnVuY3Rpb24gUHJvZHVjdCh7IHByb2R1Y3QsIGFkZFRvQ2FydCwgYWRkVG9XaXNobGlzdH0pIHtcclxuICAgIHJldHVybiAoPD5cclxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImNhcmQgcC00IG15LTNcIj5cclxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJyb3dcIj5cclxuICAgICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiY29sLW1kLTNcIj5cclxuICAgICAgICAgICAgICAgICAgICA8aW1nIHNyYz17cHJvZHVjdC5pbWFnZX0gY2xhc3NOYW1lPVwiaW1nLWZsdWlkXCIgLz5cclxuICAgICAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJjb2wtbWQtNlwiPlxyXG4gICAgICAgICAgICAgICAgICAgIDxoNCBjbGFzc05hbWU9XCJmb250LXdlaWdodC1ib2xkXCI+e3Byb2R1Y3QubmFtZX08L2g0PlxyXG4gICAgICAgICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cInRleHQtbXV0ZWRcIj57cHJvZHVjdC5kZXNjcmlwdGlvbn08L3A+XHJcbiAgICAgICAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwidGV4dC1tdXRlZCB0ZXh0LXNlY29uZGFyeVwiPkJlc3QgZm9yIHtwcm9kdWN0LmFnZV9wcmVmZXJyZWR9IHllYXIgb2xkIHBldHM8L3A+XHJcbiAgICAgICAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwidGV4dC1tdXRlZFwiPntwcm9kdWN0LnF1YW50aXR5fSBpbiBzdG9jazwvcD5cclxuICAgICAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJjb2wtbWQtM1wiPlxyXG4gICAgICAgICAgICAgICAgICAgIDxoMyBjbGFzc05hbWU9XCJmb250LXdlaWdodC1ib2xkIHRleHQtc3VjY2Vzc1wiPiQyMC4wMDwvaDM+XHJcbiAgICAgICAgICAgICAgICAgICAgPGJ1dHRvbiBjbGFzc05hbWU9XCJidG4gYnRuLWRhcmsgYnRuLWJsb2NrXCIgb25DbGljaz17KCkgPT4gYWRkVG9DYXJ0KHByb2R1Y3QuaWQpfT5cclxuICAgICAgICAgICAgICAgICAgICAgICAgQWRkIHRvIENhcnRcclxuICAgICAgICAgICAgICAgICAgICA8L2J1dHRvbj5cclxuICAgICAgICAgICAgICAgICAgICA8YnV0dG9uIGNsYXNzTmFtZT1cImJ0biBidG4tb3V0bGluZS1pbmZvIGJ0bi1ibG9ja1wiIG9uQ2xpY2s9eygpID0+IGFkZFRvV2lzaGxpc3QocHJvZHVjdC5pZCl9PlxyXG4gICAgICAgICAgICAgICAgICAgICAgICBBZGQgdG8gV2lzaGxpc3RcclxuICAgICAgICAgICAgICAgICAgICA8L2J1dHRvbj5cclxuICAgICAgICAgICAgICAgIDwvZGl2PlxyXG5cclxuICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgPC9kaXY+XHJcblxyXG4gICAgPC8+KTtcclxufVxyXG5cclxuZXhwb3J0IGRlZmF1bHQgUHJvZHVjdDsiXSwibmFtZXMiOlsiUHJvZHVjdCIsInByb2R1Y3QiLCJhZGRUb0NhcnQiLCJhZGRUb1dpc2hsaXN0IiwiZGl2IiwiY2xhc3NOYW1lIiwiaW1nIiwic3JjIiwiaW1hZ2UiLCJoNCIsIm5hbWUiLCJwIiwiZGVzY3JpcHRpb24iLCJhZ2VfcHJlZmVycmVkIiwicXVhbnRpdHkiLCJoMyIsImJ1dHRvbiIsIm9uQ2xpY2siLCJpZCJdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///./components/Product.js\n");
 
 /***/ }),
 
-/***/ 8013:
+/***/ "./db/db.js":
+/*!******************!*\
+  !*** ./db/db.js ***!
+  \******************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"addOrder\": () => (/* binding */ addOrder),\n/* harmony export */   \"addToCart\": () => (/* binding */ addToCart),\n/* harmony export */   \"addToWishlist\": () => (/* binding */ addToWishlist),\n/* harmony export */   \"clearCart\": () => (/* binding */ clearCart),\n/* harmony export */   \"clearWishlist\": () => (/* binding */ clearWishlist),\n/* harmony export */   \"connectDatabase\": () => (/* binding */ connectDatabase),\n/* harmony export */   \"deleteOrder\": () => (/* binding */ deleteOrder),\n/* harmony export */   \"deletePet\": () => (/* binding */ deletePet),\n/* harmony export */   \"ensureCollections\": () => (/* binding */ ensureCollections),\n/* harmony export */   \"getCart\": () => (/* binding */ getCart),\n/* harmony export */   \"getOrders\": () => (/* binding */ getOrders),\n/* harmony export */   \"getPet\": () => (/* binding */ getPet),\n/* harmony export */   \"getPets\": () => (/* binding */ getPets),\n/* harmony export */   \"getProduct\": () => (/* binding */ getProduct),\n/* harmony export */   \"getProducts\": () => (/* binding */ getProducts),\n/* harmony export */   \"getSeed\": () => (/* binding */ getSeed),\n/* harmony export */   \"getUser\": () => (/* binding */ getUser),\n/* harmony export */   \"getWishlist\": () => (/* binding */ getWishlist),\n/* harmony export */   \"insertPet\": () => (/* binding */ insertPet),\n/* harmony export */   \"insertSeed\": () => (/* binding */ insertSeed),\n/* harmony export */   \"insertUser\": () => (/* binding */ insertUser),\n/* harmony export */   \"removeFromCart\": () => (/* binding */ removeFromCart),\n/* harmony export */   \"removeFromWishlist\": () => (/* binding */ removeFromWishlist),\n/* harmony export */   \"searchProducts\": () => (/* binding */ searchProducts),\n/* harmony export */   \"validateLogin\": () => (/* binding */ validateLogin)\n/* harmony export */ });\n/* harmony import */ var mongodb__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! mongodb */ \"mongodb\");\n/* harmony import */ var mongodb__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(mongodb__WEBPACK_IMPORTED_MODULE_0__);\n\nconst MongoClient = (__webpack_require__(/*! mongodb */ \"mongodb\").MongoClient);\nconst seedproducts = __webpack_require__(/*! ./productsData.json */ \"./db/productsData.json\");\n// const ObjectID = require('mongodb').ObjectID;\n// get mongo client\nasync function connectDatabase() {\n    const client = await MongoClient.connect(process.env.MONGODB_URI);\n    return client;\n}\nasync function ensureCollections(client) {\n    // list of collections to ensure\n    const collections = [\n        \"users\",\n        \"products\",\n        \"orders\",\n        \"seeds\",\n        \"cart\",\n        \"wishlist\",\n        \"users_pets\"\n    ];\n    // get db\n    const db = client.db();\n    // ensure collections\n    for (const collection of collections){\n        // check if collection exists\n        const exists = await db.listCollections({\n            name: collection\n        }).hasNext();\n        // if not, create it\n        if (!exists) {\n            await db.createCollection(collection);\n        }\n    }\n    // get seed: products_seed\n    const seed = await getSeed(db, \"products_seed\");\n    // if seed doesn't exist, insert it\n    if (!seed) {\n        // seed products\n        await seedProducts(db, seedproducts);\n        // create indexes: products -> name\n        await db.collection(\"products\").createIndex({\n            name: \"text\"\n        });\n        // insert seed\n        await insertSeed(db, {\n            name: \"products_seed\",\n            date: new Date()\n        });\n    }\n}\n// insert pet\nasync function insertPet(db, pet) {\n    // get pets collection\n    const pets = db.collection(\"users_pets\");\n    // insert pet\n    const result = await pets.insertOne(pet);\n    return result;\n}\n// get pet by id\nasync function getPet(db, id) {\n    const collection = db.collection(\"users_pets\");\n    const pet = await collection.findOne({\n        _id: new mongodb__WEBPACK_IMPORTED_MODULE_0__.ObjectId(id)\n    });\n    return pet;\n}\n// get pets by user id\nasync function getPets(db, user_id) {\n    const collection = db.collection(\"users_pets\");\n    const pets = await collection.find({\n        user_id\n    }).toArray();\n    return pets;\n}\n// delete pet by id\nasync function deletePet(db, id) {\n    const collection = db.collection(\"users_pets\");\n    const result = await collection.deleteOne({\n        _id: new mongodb__WEBPACK_IMPORTED_MODULE_0__.ObjectId(id)\n    });\n    return result;\n}\n// insert user: name, email, password\nasync function insertUser(db, user) {\n    // get users collection\n    const users = db.collection(\"users\");\n    // insert user\n    const result = await users.insertOne(user);\n    return result;\n}\n// get user by email\nasync function getUser(db, email) {\n    const collection = db.collection(\"users\");\n    const result = await collection.findOne({\n        email\n    });\n    return result;\n}\n// validate login\nasync function validateLogin(db, email, password) {\n    // get user\n    const user = await getUser(db, email);\n    // if user exists, check password\n    if (user) {\n        return user.password === password;\n    }\n    // user doesn't exist\n    return false;\n}\n// insert seed: name, date run\nasync function insertSeed(db, seed) {\n    // get seeds collection\n    const seeds = db.collection(\"seeds\");\n    // insert seed\n    const result = await seeds.insertOne(seed);\n    return result;\n}\n// get seed by name\nasync function getSeed(db, name) {\n    const collection = db.collection(\"seeds\");\n    const seed = await collection.findOne({\n        name\n    });\n    return seed;\n}\n// seed products\nasync function seedProducts(db, prods) {\n    // get products collection\n    const products = db.collection(\"products\");\n    // insert products\n    const result = await products.insertMany(prods);\n    return result;\n}\n// get products\nasync function getProducts(db, filter) {\n    const collection = db.collection(\"products\");\n    const products = await collection.find(filter).toArray();\n    return products;\n}\n// get product by id\nasync function getProduct(db, id) {\n    const collection = db.collection(\"products\");\n    const product = await collection.findOne({\n        _id: new mongodb__WEBPACK_IMPORTED_MODULE_0__.ObjectId(id)\n    });\n    return product;\n}\n// search products\nasync function searchProducts(db, query) {\n    const collection = db.collection(\"products\");\n    const products = await collection.find({\n        $text: {\n            $search: query\n        }\n    }).toArray();\n    return products;\n}\n// get a users cart\nasync function getCart(db, user_id) {\n    const collection = db.collection(\"cart\");\n    const cart = await collection.findOne({\n        user_id\n    });\n    // if cart exists, return it\n    if (cart) {\n        return cart;\n    } else {\n        // if cart doesn't exist, create it\n        const newCart = {\n            user_id,\n            products: []\n        };\n        // insert new cart\n        await collection.insertOne(newCart);\n        return newCart;\n    }\n}\n// add product to cart\nasync function addToCart(db, user_id, product_id) {\n    // get cart\n    const cart = await getCart(db, user_id);\n    // get cart products\n    const products = cart.products;\n    // if product is already in cart, increment quantity\n    const index = products.findIndex((product)=>product.product_id === product_id);\n    if (index !== -1) {\n        products[index].quantity++;\n    } else {\n        // if product is not in cart, add it\n        products.push({\n            product_id,\n            quantity: 1\n        });\n    }\n    // update cart\n    const collection = db.collection(\"cart\");\n    const result = await collection.updateOne({\n        user_id\n    }, {\n        $set: {\n            products\n        }\n    });\n    return result;\n}\n// remove product from cart\nasync function removeFromCart(db, user_id, product_id) {\n    // get cart\n    const cart = await getCart(db, user_id);\n    // get cart products\n    const products = cart.products;\n    // if product is in cart, remove it\n    const index = products.findIndex((product)=>product.product_id === product_id);\n    if (index !== -1) {\n        products.splice(index, 1);\n        // update cart\n        const collection = db.collection(\"cart\");\n        const result = await collection.updateOne({\n            user_id\n        }, {\n            $set: {\n                products\n            }\n        });\n        console.log(result);\n        return result;\n    }\n    return null;\n}\n// clear cart\nasync function clearCart(db, user_id) {\n    // get cart\n    const cart = await getCart(db, user_id);\n    // get cart products\n    const products = cart.products;\n    // if cart has products, remove them\n    if (products.length > 0) {\n        // update cart\n        const collection = db.collection(\"cart\");\n        const result = await collection.updateOne({\n            user_id\n        }, {\n            $set: {\n                products: []\n            }\n        });\n        return result;\n    }\n    return null;\n}\n// get a users wishlist\nasync function getWishlist(db, user_id) {\n    const collection = db.collection(\"wishlist\");\n    // get wishlist\n    const list = await collection.findOne({\n        user_id\n    });\n    // if wishlist exists, return it\n    if (list) {\n        return list;\n    } else {\n        // if wishlist doesn't exist, create it\n        const newList = {\n            user_id,\n            products: []\n        };\n        // insert new wishlist\n        await collection.insertOne(newList);\n        return newList;\n    }\n}\n// add product to wishlist\nasync function addToWishlist(db, user_id, product_id) {\n    // get wishlist\n    const list = await getWishlist(db, user_id);\n    // get wishlist products\n    const products = list.products;\n    // if product is already in wishlist, do nothing\n    const index = products.findIndex((product)=>product.product_id === product_id);\n    if (index === -1) {\n        // if product is not in wishlist, add it\n        products.push({\n            product_id\n        });\n        // update wishlist\n        const collection = db.collection(\"wishlist\");\n        const result = await collection.updateOne({\n            user_id\n        }, {\n            $set: {\n                products\n            }\n        });\n        return result;\n    }\n    return null;\n}\n// remove product from wishlist\nasync function removeFromWishlist(db, user_id, product_id) {\n    // get wishlist\n    const list = await getWishlist(db, user_id);\n    // get wishlist products\n    const products = list.products;\n    // if product is in wishlist, remove it\n    const index = products.findIndex((product)=>product.product_id === product_id);\n    if (index !== -1) {\n        products.splice(index, 1);\n        // update wishlist\n        const collection = db.collection(\"wishlist\");\n        const result = await collection.updateOne({\n            user_id\n        }, {\n            $set: {\n                products\n            }\n        });\n        return result;\n    }\n    return null;\n}\n// clear wishlist\nasync function clearWishlist(db, user_id) {\n    // get wishlist\n    const list = await getWishlist(db, user_id);\n    // get wishlist products\n    const products = list.products;\n    // if wishlist has products, remove them\n    if (products.length > 0) {\n        // update wishlist\n        const collection = db.collection(\"wishlist\");\n        const result = await collection.updateOne({\n            user_id\n        }, {\n            $set: {\n                products: []\n            }\n        });\n        return result;\n    }\n    return null;\n}\n// get a users orders\nasync function getOrders(db, user_id) {\n    const collection = db.collection(\"orders\");\n    // get orders: order by date, newest first\n    const orders = await collection.find({\n        user_id\n    }).sort({\n        date: -1\n    }).toArray();\n    return orders;\n}\n// add order\nasync function addOrder(db, order) {\n    // get orders collection\n    const orders = db.collection(\"orders\");\n    // insert order\n    const result = await orders.insertOne(order);\n    return result;\n}\n// delete order\nasync function deleteOrder(db, order_id) {\n    // get orders collection\n    const orders = db.collection(\"orders\");\n    // delete order\n    const result = await orders.deleteOne({\n        _id: new mongodb__WEBPACK_IMPORTED_MODULE_0__.ObjectId(order_id)\n    });\n    return result;\n}\n\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,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ZXNDb250ZW50IjpbImltcG9ydCB7IE9iamVjdElkIH0gZnJvbSAnbW9uZ29kYic7XHJcblxyXG5jb25zdCBNb25nb0NsaWVudCA9IHJlcXVpcmUoJ21vbmdvZGInKS5Nb25nb0NsaWVudDtcclxuXHJcbmNvbnN0IHNlZWRwcm9kdWN0cyA9IHJlcXVpcmUoJy4vcHJvZHVjdHNEYXRhLmpzb24nKTtcclxuXHJcbi8vIGNvbnN0IE9iamVjdElEID0gcmVxdWlyZSgnbW9uZ29kYicpLk9iamVjdElEO1xyXG5cclxuLy8gZ2V0IG1vbmdvIGNsaWVudFxyXG5hc3luYyBmdW5jdGlvbiBjb25uZWN0RGF0YWJhc2UoKSB7XHJcbiAgICBjb25zdCBjbGllbnQgPSBhd2FpdCBNb25nb0NsaWVudC5jb25uZWN0KHByb2Nlc3MuZW52Lk1PTkdPREJfVVJJKTtcclxuXHJcbiAgICByZXR1cm4gY2xpZW50O1xyXG59XHJcblxyXG5hc3luYyBmdW5jdGlvbiBlbnN1cmVDb2xsZWN0aW9ucyhjbGllbnQpIHtcclxuICAgIC8vIGxpc3Qgb2YgY29sbGVjdGlvbnMgdG8gZW5zdXJlXHJcbiAgICBjb25zdCBjb2xsZWN0aW9ucyA9IFsndXNlcnMnLCAncHJvZHVjdHMnLCAnb3JkZXJzJywgJ3NlZWRzJywgJ2NhcnQnLCAnd2lzaGxpc3QnLCAndXNlcnNfcGV0cyddO1xyXG5cclxuICAgIC8vIGdldCBkYlxyXG4gICAgY29uc3QgZGIgPSBjbGllbnQuZGIoKTtcclxuXHJcbiAgICAvLyBlbnN1cmUgY29sbGVjdGlvbnNcclxuICAgIGZvciAoY29uc3QgY29sbGVjdGlvbiBvZiBjb2xsZWN0aW9ucykge1xyXG4gICAgICAgIC8vIGNoZWNrIGlmIGNvbGxlY3Rpb24gZXhpc3RzXHJcbiAgICAgICAgY29uc3QgZXhpc3RzID0gYXdhaXQgZGIubGlzdENvbGxlY3Rpb25zKHsgbmFtZTogY29sbGVjdGlvbiB9KS5oYXNOZXh0KCk7XHJcblxyXG4gICAgICAgIC8vIGlmIG5vdCwgY3JlYXRlIGl0XHJcbiAgICAgICAgaWYgKCFleGlzdHMpIHtcclxuICAgICAgICAgICAgYXdhaXQgZGIuY3JlYXRlQ29sbGVjdGlvbihjb2xsZWN0aW9uKTtcclxuICAgICAgICB9XHJcbiAgICB9XHJcblxyXG4gICAgXHJcbiAgICAvLyBnZXQgc2VlZDogcHJvZHVjdHNfc2VlZFxyXG4gICAgY29uc3Qgc2VlZCA9IGF3YWl0IGdldFNlZWQoZGIsICdwcm9kdWN0c19zZWVkJyk7XHJcbiAgICBcclxuICAgIC8vIGlmIHNlZWQgZG9lc24ndCBleGlzdCwgaW5zZXJ0IGl0XHJcbiAgICBpZiAoIXNlZWQpIHtcclxuICAgICAgICAvLyBzZWVkIHByb2R1Y3RzXHJcbiAgICAgICAgYXdhaXQgc2VlZFByb2R1Y3RzKGRiLCBzZWVkcHJvZHVjdHMpO1xyXG4gICAgICAgIFxyXG4gICAgICAgIC8vIGNyZWF0ZSBpbmRleGVzOiBwcm9kdWN0cyAtPiBuYW1lXHJcbiAgICAgICAgYXdhaXQgZGIuY29sbGVjdGlvbigncHJvZHVjdHMnKS5jcmVhdGVJbmRleCh7IG5hbWU6ICd0ZXh0JyB9KTtcclxuICAgICAgICBcclxuICAgICAgICAvLyBpbnNlcnQgc2VlZFxyXG4gICAgICAgIGF3YWl0IGluc2VydFNlZWQoZGIsIHtcclxuICAgICAgICAgICAgbmFtZTogJ3Byb2R1Y3RzX3NlZWQnLFxyXG4gICAgICAgICAgICBkYXRlOiBuZXcgRGF0ZSgpLFxyXG4gICAgICAgIH0pO1xyXG4gICAgfVxyXG59XHJcblxyXG4vLyBpbnNlcnQgcGV0XHJcbmFzeW5jIGZ1bmN0aW9uIGluc2VydFBldChkYiwgcGV0KSB7XHJcbiAgICAvLyBnZXQgcGV0cyBjb2xsZWN0aW9uXHJcbiAgICBjb25zdCBwZXRzID0gZGIuY29sbGVjdGlvbigndXNlcnNfcGV0cycpO1xyXG5cclxuICAgIC8vIGluc2VydCBwZXRcclxuICAgIGNvbnN0IHJlc3VsdCA9IGF3YWl0IHBldHMuaW5zZXJ0T25lKHBldCk7XHJcblxyXG4gICAgcmV0dXJuIHJlc3VsdDtcclxufVxyXG5cclxuLy8gZ2V0IHBldCBieSBpZFxyXG5hc3luYyBmdW5jdGlvbiBnZXRQZXQoZGIsIGlkKSB7XHJcbiAgICBjb25zdCBjb2xsZWN0aW9uID0gZGIuY29sbGVjdGlvbigndXNlcnNfcGV0cycpO1xyXG5cclxuICAgIGNvbnN0IHBldCA9IGF3YWl0IGNvbGxlY3Rpb24uZmluZE9uZSh7IF9pZDogbmV3IE9iamVjdElkKGlkKSB9KTtcclxuXHJcbiAgICByZXR1cm4gcGV0O1xyXG59XHJcblxyXG4vLyBnZXQgcGV0cyBieSB1c2VyIGlkXHJcbmFzeW5jIGZ1bmN0aW9uIGdldFBldHMoZGIsIHVzZXJfaWQpIHtcclxuICAgIGNvbnN0IGNvbGxlY3Rpb24gPSBkYi5jb2xsZWN0aW9uKCd1c2Vyc19wZXRzJyk7XHJcblxyXG4gICAgY29uc3QgcGV0cyA9IGF3YWl0IGNvbGxlY3Rpb24uZmluZCh7IHVzZXJfaWQgfSkudG9BcnJheSgpO1xyXG5cclxuICAgIHJldHVybiBwZXRzO1xyXG59XHJcblxyXG4vLyBkZWxldGUgcGV0IGJ5IGlkXHJcbmFzeW5jIGZ1bmN0aW9uIGRlbGV0ZVBldChkYiwgaWQpIHtcclxuICAgIGNvbnN0IGNvbGxlY3Rpb24gPSBkYi5jb2xsZWN0aW9uKCd1c2Vyc19wZXRzJyk7XHJcblxyXG4gICAgY29uc3QgcmVzdWx0ID0gYXdhaXQgY29sbGVjdGlvbi5kZWxldGVPbmUoeyBfaWQ6IG5ldyBPYmplY3RJZChpZCkgfSk7XHJcblxyXG4gICAgcmV0dXJuIHJlc3VsdDtcclxufVxyXG5cclxuLy8gaW5zZXJ0IHVzZXI6IG5hbWUsIGVtYWlsLCBwYXNzd29yZFxyXG5hc3luYyBmdW5jdGlvbiBpbnNlcnRVc2VyKGRiLCB1c2VyKSB7XHJcbiAgICAvLyBnZXQgdXNlcnMgY29sbGVjdGlvblxyXG4gICAgY29uc3QgdXNlcnMgPSBkYi5jb2xsZWN0aW9uKCd1c2VycycpO1xyXG5cclxuICAgIC8vIGluc2VydCB1c2VyXHJcbiAgICBjb25zdCByZXN1bHQgPSBhd2FpdCB1c2Vycy5pbnNlcnRPbmUodXNlcik7XHJcblxyXG4gICAgcmV0dXJuIHJlc3VsdDtcclxufVxyXG5cclxuLy8gZ2V0IHVzZXIgYnkgZW1haWxcclxuYXN5bmMgZnVuY3Rpb24gZ2V0VXNlcihkYiwgZW1haWwpIHtcclxuICAgIGNvbnN0IGNvbGxlY3Rpb24gPSBkYi5jb2xsZWN0aW9uKCd1c2VycycpO1xyXG4gICAgY29uc3QgcmVzdWx0ID0gYXdhaXQgY29sbGVjdGlvbi5maW5kT25lKHsgZW1haWwgfSk7XHJcblxyXG4gICAgcmV0dXJuIHJlc3VsdDtcclxufVxyXG5cclxuLy8gdmFsaWRhdGUgbG9naW5cclxuYXN5bmMgZnVuY3Rpb24gdmFsaWRhdGVMb2dpbihkYiwgZW1haWwsIHBhc3N3b3JkKSB7XHJcbiAgICAvLyBnZXQgdXNlclxyXG4gICAgY29uc3QgdXNlciA9IGF3YWl0IGdldFVzZXIoZGIsIGVtYWlsKTtcclxuXHJcbiAgICAvLyBpZiB1c2VyIGV4aXN0cywgY2hlY2sgcGFzc3dvcmRcclxuICAgIGlmICh1c2VyKSB7XHJcbiAgICAgICAgcmV0dXJuIHVzZXIucGFzc3dvcmQgPT09IHBhc3N3b3JkO1xyXG4gICAgfVxyXG5cclxuICAgIC8vIHVzZXIgZG9lc24ndCBleGlzdFxyXG4gICAgcmV0dXJuIGZhbHNlO1xyXG59XHJcblxyXG4vLyBpbnNlcnQgc2VlZDogbmFtZSwgZGF0ZSBydW5cclxuYXN5bmMgZnVuY3Rpb24gaW5zZXJ0U2VlZChkYiwgc2VlZCkge1xyXG4gICAgLy8gZ2V0IHNlZWRzIGNvbGxlY3Rpb25cclxuICAgIGNvbnN0IHNlZWRzID0gZGIuY29sbGVjdGlvbignc2VlZHMnKTtcclxuXHJcbiAgICAvLyBpbnNlcnQgc2VlZFxyXG4gICAgY29uc3QgcmVzdWx0ID0gYXdhaXQgc2VlZHMuaW5zZXJ0T25lKHNlZWQpO1xyXG5cclxuICAgIHJldHVybiByZXN1bHQ7XHJcbn1cclxuXHJcbi8vIGdldCBzZWVkIGJ5IG5hbWVcclxuYXN5bmMgZnVuY3Rpb24gZ2V0U2VlZChkYiwgbmFtZSkge1xyXG4gICAgY29uc3QgY29sbGVjdGlvbiA9IGRiLmNvbGxlY3Rpb24oJ3NlZWRzJyk7XHJcblxyXG4gICAgY29uc3Qgc2VlZCA9IGF3YWl0IGNvbGxlY3Rpb24uZmluZE9uZSh7IG5hbWUgfSk7XHJcblxyXG4gICAgcmV0dXJuIHNlZWQ7XHJcbn1cclxuXHJcbi8vIHNlZWQgcHJvZHVjdHNcclxuYXN5bmMgZnVuY3Rpb24gc2VlZFByb2R1Y3RzKGRiLCBwcm9kcykge1xyXG4gICAgLy8gZ2V0IHByb2R1Y3RzIGNvbGxlY3Rpb25cclxuICAgIGNvbnN0IHByb2R1Y3RzID0gZGIuY29sbGVjdGlvbigncHJvZHVjdHMnKTtcclxuXHJcbiAgICAvLyBpbnNlcnQgcHJvZHVjdHNcclxuICAgIGNvbnN0IHJlc3VsdCA9IGF3YWl0IHByb2R1Y3RzLmluc2VydE1hbnkocHJvZHMpO1xyXG5cclxuICAgIHJldHVybiByZXN1bHQ7XHJcbn1cclxuXHJcbi8vIGdldCBwcm9kdWN0c1xyXG5hc3luYyBmdW5jdGlvbiBnZXRQcm9kdWN0cyhkYiwgZmlsdGVyKSB7XHJcbiAgICBjb25zdCBjb2xsZWN0aW9uID0gZGIuY29sbGVjdGlvbigncHJvZHVjdHMnKTtcclxuXHJcbiAgICBjb25zdCBwcm9kdWN0cyA9IGF3YWl0IGNvbGxlY3Rpb24uZmluZChmaWx0ZXIpLnRvQXJyYXkoKTtcclxuXHJcbiAgICByZXR1cm4gcHJvZHVjdHM7XHJcbn1cclxuXHJcbi8vIGdldCBwcm9kdWN0IGJ5IGlkXHJcbmFzeW5jIGZ1bmN0aW9uIGdldFByb2R1Y3QoZGIsIGlkKSB7XHJcbiAgICBjb25zdCBjb2xsZWN0aW9uID0gZGIuY29sbGVjdGlvbigncHJvZHVjdHMnKTtcclxuXHJcbiAgICBjb25zdCBwcm9kdWN0ID0gYXdhaXQgY29sbGVjdGlvbi5maW5kT25lKHsgX2lkOiBuZXcgT2JqZWN0SWQoaWQpIH0pO1xyXG5cclxuICAgIHJldHVybiBwcm9kdWN0O1xyXG59XHJcblxyXG4vLyBzZWFyY2ggcHJvZHVjdHNcclxuYXN5bmMgZnVuY3Rpb24gc2VhcmNoUHJvZHVjdHMoZGIsIHF1ZXJ5KSB7XHJcbiAgICBjb25zdCBjb2xsZWN0aW9uID0gZGIuY29sbGVjdGlvbigncHJvZHVjdHMnKTtcclxuXHJcbiAgICBjb25zdCBwcm9kdWN0cyA9IGF3YWl0IGNvbGxlY3Rpb24uZmluZCh7ICR0ZXh0OiB7ICRzZWFyY2g6IHF1ZXJ5IH0gfSkudG9BcnJheSgpO1xyXG5cclxuICAgIHJldHVybiBwcm9kdWN0cztcclxufVxyXG5cclxuLy8gZ2V0IGEgdXNlcnMgY2FydFxyXG5hc3luYyBmdW5jdGlvbiBnZXRDYXJ0KGRiLCB1c2VyX2lkKSB7XHJcbiAgICBjb25zdCBjb2xsZWN0aW9uID0gZGIuY29sbGVjdGlvbignY2FydCcpO1xyXG5cclxuICAgIGNvbnN0IGNhcnQgPSBhd2FpdCBjb2xsZWN0aW9uLmZpbmRPbmUoeyB1c2VyX2lkIH0pO1xyXG5cclxuICAgIC8vIGlmIGNhcnQgZXhpc3RzLCByZXR1cm4gaXRcclxuICAgIGlmIChjYXJ0KSB7XHJcbiAgICAgICAgcmV0dXJuIGNhcnQ7XHJcbiAgICB9IGVsc2Uge1xyXG4gICAgICAgIC8vIGlmIGNhcnQgZG9lc24ndCBleGlzdCwgY3JlYXRlIGl0XHJcbiAgICAgICAgY29uc3QgbmV3Q2FydCA9IHtcclxuICAgICAgICAgICAgdXNlcl9pZCxcclxuICAgICAgICAgICAgcHJvZHVjdHM6IFtdLFxyXG4gICAgICAgIH07XHJcblxyXG4gICAgICAgIC8vIGluc2VydCBuZXcgY2FydFxyXG4gICAgICAgIGF3YWl0IGNvbGxlY3Rpb24uaW5zZXJ0T25lKG5ld0NhcnQpO1xyXG5cclxuICAgICAgICByZXR1cm4gbmV3Q2FydDtcclxuICAgIH1cclxufVxyXG5cclxuLy8gYWRkIHByb2R1Y3QgdG8gY2FydFxyXG5hc3luYyBmdW5jdGlvbiBhZGRUb0NhcnQoZGIsIHVzZXJfaWQsIHByb2R1Y3RfaWQpIHtcclxuICAgIC8vIGdldCBjYXJ0XHJcbiAgICBjb25zdCBjYXJ0ID0gYXdhaXQgZ2V0Q2FydChkYiwgdXNlcl9pZCk7XHJcblxyXG4gICAgLy8gZ2V0IGNhcnQgcHJvZHVjdHNcclxuICAgIGNvbnN0IHByb2R1Y3RzID0gY2FydC5wcm9kdWN0cztcclxuXHJcbiAgICAvLyBpZiBwcm9kdWN0IGlzIGFscmVhZHkgaW4gY2FydCwgaW5jcmVtZW50IHF1YW50aXR5XHJcbiAgICBjb25zdCBpbmRleCA9IHByb2R1Y3RzLmZpbmRJbmRleCgocHJvZHVjdCkgPT4gcHJvZHVjdC5wcm9kdWN0X2lkID09PSBwcm9kdWN0X2lkKTtcclxuXHJcbiAgICBpZiAoaW5kZXggIT09IC0xKSB7XHJcbiAgICAgICAgcHJvZHVjdHNbaW5kZXhdLnF1YW50aXR5Kys7XHJcbiAgICB9IGVsc2Uge1xyXG4gICAgICAgIC8vIGlmIHByb2R1Y3QgaXMgbm90IGluIGNhcnQsIGFkZCBpdFxyXG4gICAgICAgIHByb2R1Y3RzLnB1c2goe1xyXG4gICAgICAgICAgICBwcm9kdWN0X2lkLFxyXG4gICAgICAgICAgICBxdWFudGl0eTogMSxcclxuICAgICAgICB9KTtcclxuICAgIH1cclxuXHJcbiAgICAvLyB1cGRhdGUgY2FydFxyXG4gICAgY29uc3QgY29sbGVjdGlvbiA9IGRiLmNvbGxlY3Rpb24oJ2NhcnQnKTtcclxuXHJcbiAgICBjb25zdCByZXN1bHQgPSBhd2FpdCBjb2xsZWN0aW9uLnVwZGF0ZU9uZShcclxuICAgICAgICB7IHVzZXJfaWQgfSxcclxuICAgICAgICB7ICRzZXQ6IHsgcHJvZHVjdHMgfSB9XHJcbiAgICApO1xyXG5cclxuICAgIHJldHVybiByZXN1bHQ7XHJcbn1cclxuXHJcbi8vIHJlbW92ZSBwcm9kdWN0IGZyb20gY2FydFxyXG5hc3luYyBmdW5jdGlvbiByZW1vdmVGcm9tQ2FydChkYiwgdXNlcl9pZCwgcHJvZHVjdF9pZCkge1xyXG4gICAgLy8gZ2V0IGNhcnRcclxuICAgIGNvbnN0IGNhcnQgPSBhd2FpdCBnZXRDYXJ0KGRiLCB1c2VyX2lkKTtcclxuXHJcbiAgICAvLyBnZXQgY2FydCBwcm9kdWN0c1xyXG4gICAgY29uc3QgcHJvZHVjdHMgPSBjYXJ0LnByb2R1Y3RzO1xyXG5cclxuICAgIC8vIGlmIHByb2R1Y3QgaXMgaW4gY2FydCwgcmVtb3ZlIGl0XHJcbiAgICBjb25zdCBpbmRleCA9IHByb2R1Y3RzLmZpbmRJbmRleCgocHJvZHVjdCkgPT4gcHJvZHVjdC5wcm9kdWN0X2lkID09PSBwcm9kdWN0X2lkKTtcclxuXHJcbiAgICBpZiAoaW5kZXggIT09IC0xKSB7XHJcbiAgICAgICAgcHJvZHVjdHMuc3BsaWNlKGluZGV4LCAxKTtcclxuXHJcbiAgICAgICAgLy8gdXBkYXRlIGNhcnRcclxuICAgICAgICBjb25zdCBjb2xsZWN0aW9uID0gZGIuY29sbGVjdGlvbignY2FydCcpO1xyXG5cclxuICAgICAgICBjb25zdCByZXN1bHQgPSBhd2FpdCBjb2xsZWN0aW9uLnVwZGF0ZU9uZShcclxuICAgICAgICAgICAgeyB1c2VyX2lkIH0sXHJcbiAgICAgICAgICAgIHsgJHNldDogeyBwcm9kdWN0cyB9IH1cclxuICAgICAgICApO1xyXG5cclxuICAgICAgICBjb25zb2xlLmxvZyhyZXN1bHQpO1xyXG5cclxuICAgICAgICByZXR1cm4gcmVzdWx0O1xyXG4gICAgfVxyXG5cclxuICAgIHJldHVybiBudWxsO1xyXG59XHJcblxyXG4vLyBjbGVhciBjYXJ0XHJcbmFzeW5jIGZ1bmN0aW9uIGNsZWFyQ2FydChkYiwgdXNlcl9pZCkge1xyXG4gICAgLy8gZ2V0IGNhcnRcclxuICAgIGNvbnN0IGNhcnQgPSBhd2FpdCBnZXRDYXJ0KGRiLCB1c2VyX2lkKTtcclxuXHJcbiAgICAvLyBnZXQgY2FydCBwcm9kdWN0c1xyXG4gICAgY29uc3QgcHJvZHVjdHMgPSBjYXJ0LnByb2R1Y3RzO1xyXG5cclxuICAgIC8vIGlmIGNhcnQgaGFzIHByb2R1Y3RzLCByZW1vdmUgdGhlbVxyXG4gICAgaWYgKHByb2R1Y3RzLmxlbmd0aCA+IDApIHtcclxuICAgICAgICAvLyB1cGRhdGUgY2FydFxyXG4gICAgICAgIGNvbnN0IGNvbGxlY3Rpb24gPSBkYi5jb2xsZWN0aW9uKCdjYXJ0Jyk7XHJcblxyXG4gICAgICAgIGNvbnN0IHJlc3VsdCA9IGF3YWl0IGNvbGxlY3Rpb24udXBkYXRlT25lKFxyXG4gICAgICAgICAgICB7IHVzZXJfaWQgfSxcclxuICAgICAgICAgICAgeyAkc2V0OiB7IHByb2R1Y3RzOiBbXSB9IH1cclxuICAgICAgICApO1xyXG5cclxuICAgICAgICByZXR1cm4gcmVzdWx0O1xyXG4gICAgfVxyXG5cclxuICAgIHJldHVybiBudWxsO1xyXG59XHJcblxyXG4vLyBnZXQgYSB1c2VycyB3aXNobGlzdFxyXG5hc3luYyBmdW5jdGlvbiBnZXRXaXNobGlzdChkYiwgdXNlcl9pZCkge1xyXG4gICAgY29uc3QgY29sbGVjdGlvbiA9IGRiLmNvbGxlY3Rpb24oJ3dpc2hsaXN0Jyk7XHJcblxyXG4gICAgLy8gZ2V0IHdpc2hsaXN0XHJcbiAgICBjb25zdCBsaXN0ID0gYXdhaXQgY29sbGVjdGlvbi5maW5kT25lKHsgdXNlcl9pZCB9KTtcclxuXHJcbiAgICAvLyBpZiB3aXNobGlzdCBleGlzdHMsIHJldHVybiBpdFxyXG4gICAgaWYgKGxpc3QpIHtcclxuICAgICAgICByZXR1cm4gbGlzdDtcclxuICAgIH0gZWxzZSB7XHJcbiAgICAgICAgLy8gaWYgd2lzaGxpc3QgZG9lc24ndCBleGlzdCwgY3JlYXRlIGl0XHJcbiAgICAgICAgY29uc3QgbmV3TGlzdCA9IHtcclxuICAgICAgICAgICAgdXNlcl9pZCxcclxuICAgICAgICAgICAgcHJvZHVjdHM6IFtdLFxyXG4gICAgICAgIH07XHJcblxyXG4gICAgICAgIC8vIGluc2VydCBuZXcgd2lzaGxpc3RcclxuICAgICAgICBhd2FpdCBjb2xsZWN0aW9uLmluc2VydE9uZShuZXdMaXN0KTtcclxuXHJcbiAgICAgICAgcmV0dXJuIG5ld0xpc3Q7XHJcbiAgICB9XHJcblxyXG59XHJcblxyXG4vLyBhZGQgcHJvZHVjdCB0byB3aXNobGlzdFxyXG5hc3luYyBmdW5jdGlvbiBhZGRUb1dpc2hsaXN0KGRiLCB1c2VyX2lkLCBwcm9kdWN0X2lkKSB7XHJcbiAgICAvLyBnZXQgd2lzaGxpc3RcclxuICAgIGNvbnN0IGxpc3QgPSBhd2FpdCBnZXRXaXNobGlzdChkYiwgdXNlcl9pZCk7XHJcblxyXG4gICAgLy8gZ2V0IHdpc2hsaXN0IHByb2R1Y3RzXHJcbiAgICBjb25zdCBwcm9kdWN0cyA9IGxpc3QucHJvZHVjdHM7XHJcblxyXG4gICAgLy8gaWYgcHJvZHVjdCBpcyBhbHJlYWR5IGluIHdpc2hsaXN0LCBkbyBub3RoaW5nXHJcbiAgICBjb25zdCBpbmRleCA9IHByb2R1Y3RzLmZpbmRJbmRleCgocHJvZHVjdCkgPT4gcHJvZHVjdC5wcm9kdWN0X2lkID09PSBwcm9kdWN0X2lkKTtcclxuXHJcbiAgICBpZiAoaW5kZXggPT09IC0xKSB7XHJcbiAgICAgICAgLy8gaWYgcHJvZHVjdCBpcyBub3QgaW4gd2lzaGxpc3QsIGFkZCBpdFxyXG4gICAgICAgIHByb2R1Y3RzLnB1c2goe1xyXG4gICAgICAgICAgICBwcm9kdWN0X2lkLFxyXG4gICAgICAgIH0pO1xyXG5cclxuICAgICAgICAvLyB1cGRhdGUgd2lzaGxpc3RcclxuICAgICAgICBjb25zdCBjb2xsZWN0aW9uID0gZGIuY29sbGVjdGlvbignd2lzaGxpc3QnKTtcclxuXHJcbiAgICAgICAgY29uc3QgcmVzdWx0ID0gYXdhaXQgY29sbGVjdGlvbi51cGRhdGVPbmUoXHJcbiAgICAgICAgICAgIHsgdXNlcl9pZCB9LFxyXG4gICAgICAgICAgICB7ICRzZXQ6IHsgcHJvZHVjdHMgfSB9XHJcbiAgICAgICAgKTtcclxuXHJcbiAgICAgICAgcmV0dXJuIHJlc3VsdDtcclxuICAgIH1cclxuXHJcbiAgICByZXR1cm4gbnVsbDtcclxufVxyXG5cclxuLy8gcmVtb3ZlIHByb2R1Y3QgZnJvbSB3aXNobGlzdFxyXG5hc3luYyBmdW5jdGlvbiByZW1vdmVGcm9tV2lzaGxpc3QoZGIsIHVzZXJfaWQsIHByb2R1Y3RfaWQpIHtcclxuICAgIC8vIGdldCB3aXNobGlzdFxyXG4gICAgY29uc3QgbGlzdCA9IGF3YWl0IGdldFdpc2hsaXN0KGRiLCB1c2VyX2lkKTtcclxuXHJcbiAgICAvLyBnZXQgd2lzaGxpc3QgcHJvZHVjdHNcclxuICAgIGNvbnN0IHByb2R1Y3RzID0gbGlzdC5wcm9kdWN0cztcclxuXHJcbiAgICAvLyBpZiBwcm9kdWN0IGlzIGluIHdpc2hsaXN0LCByZW1vdmUgaXRcclxuICAgIGNvbnN0IGluZGV4ID0gcHJvZHVjdHMuZmluZEluZGV4KChwcm9kdWN0KSA9PiBwcm9kdWN0LnByb2R1Y3RfaWQgPT09IHByb2R1Y3RfaWQpO1xyXG5cclxuICAgIGlmIChpbmRleCAhPT0gLTEpIHtcclxuICAgICAgICBwcm9kdWN0cy5zcGxpY2UoaW5kZXgsIDEpO1xyXG5cclxuICAgICAgICAvLyB1cGRhdGUgd2lzaGxpc3RcclxuICAgICAgICBjb25zdCBjb2xsZWN0aW9uID0gZGIuY29sbGVjdGlvbignd2lzaGxpc3QnKTtcclxuXHJcbiAgICAgICAgY29uc3QgcmVzdWx0ID0gYXdhaXQgY29sbGVjdGlvbi51cGRhdGVPbmUoXHJcbiAgICAgICAgICAgIHsgdXNlcl9pZCB9LFxyXG4gICAgICAgICAgICB7ICRzZXQ6IHsgcHJvZHVjdHMgfSB9XHJcbiAgICAgICAgKTtcclxuXHJcbiAgICAgICAgcmV0dXJuIHJlc3VsdDtcclxuICAgIH1cclxuXHJcbiAgICByZXR1cm4gbnVsbDtcclxufVxyXG5cclxuLy8gY2xlYXIgd2lzaGxpc3RcclxuYXN5bmMgZnVuY3Rpb24gY2xlYXJXaXNobGlzdChkYiwgdXNlcl9pZCkge1xyXG4gICAgLy8gZ2V0IHdpc2hsaXN0XHJcbiAgICBjb25zdCBsaXN0ID0gYXdhaXQgZ2V0V2lzaGxpc3QoZGIsIHVzZXJfaWQpO1xyXG5cclxuICAgIC8vIGdldCB3aXNobGlzdCBwcm9kdWN0c1xyXG4gICAgY29uc3QgcHJvZHVjdHMgPSBsaXN0LnByb2R1Y3RzO1xyXG5cclxuICAgIC8vIGlmIHdpc2hsaXN0IGhhcyBwcm9kdWN0cywgcmVtb3ZlIHRoZW1cclxuICAgIGlmIChwcm9kdWN0cy5sZW5ndGggPiAwKSB7XHJcbiAgICAgICAgLy8gdXBkYXRlIHdpc2hsaXN0XHJcbiAgICAgICAgY29uc3QgY29sbGVjdGlvbiA9IGRiLmNvbGxlY3Rpb24oJ3dpc2hsaXN0Jyk7XHJcblxyXG4gICAgICAgIGNvbnN0IHJlc3VsdCA9IGF3YWl0IGNvbGxlY3Rpb24udXBkYXRlT25lKFxyXG4gICAgICAgICAgICB7IHVzZXJfaWQgfSxcclxuICAgICAgICAgICAgeyAkc2V0OiB7IHByb2R1Y3RzOiBbXSB9IH1cclxuICAgICAgICApO1xyXG5cclxuICAgICAgICByZXR1cm4gcmVzdWx0O1xyXG4gICAgfVxyXG5cclxuICAgIHJldHVybiBudWxsO1xyXG59XHJcblxyXG4vLyBnZXQgYSB1c2VycyBvcmRlcnNcclxuYXN5bmMgZnVuY3Rpb24gZ2V0T3JkZXJzKGRiLCB1c2VyX2lkKSB7XHJcbiAgICBjb25zdCBjb2xsZWN0aW9uID0gZGIuY29sbGVjdGlvbignb3JkZXJzJyk7XHJcblxyXG4gICAgLy8gZ2V0IG9yZGVyczogb3JkZXIgYnkgZGF0ZSwgbmV3ZXN0IGZpcnN0XHJcbiAgICBjb25zdCBvcmRlcnMgPSBhd2FpdCBjb2xsZWN0aW9uLmZpbmQoeyB1c2VyX2lkIH0pLnNvcnQoeyBkYXRlOiAtMSB9KS50b0FycmF5KCk7XHJcblxyXG4gICAgcmV0dXJuIG9yZGVycztcclxufVxyXG5cclxuLy8gYWRkIG9yZGVyXHJcbmFzeW5jIGZ1bmN0aW9uIGFkZE9yZGVyKGRiLCBvcmRlcikge1xyXG4gICAgLy8gZ2V0IG9yZGVycyBjb2xsZWN0aW9uXHJcbiAgICBjb25zdCBvcmRlcnMgPSBkYi5jb2xsZWN0aW9uKCdvcmRlcnMnKTtcclxuICAgIC8vIGluc2VydCBvcmRlclxyXG4gICAgY29uc3QgcmVzdWx0ID0gYXdhaXQgb3JkZXJzLmluc2VydE9uZShvcmRlcik7XHJcblxyXG4gICAgcmV0dXJuIHJlc3VsdDtcclxufVxyXG5cclxuLy8gZGVsZXRlIG9yZGVyXHJcbmFzeW5jIGZ1bmN0aW9uIGRlbGV0ZU9yZGVyKGRiLCBvcmRlcl9pZCkge1xyXG4gICAgLy8gZ2V0IG9yZGVycyBjb2xsZWN0aW9uXHJcbiAgICBjb25zdCBvcmRlcnMgPSBkYi5jb2xsZWN0aW9uKCdvcmRlcnMnKTtcclxuXHJcbiAgICAvLyBkZWxldGUgb3JkZXJcclxuICAgIGNvbnN0IHJlc3VsdCA9IGF3YWl0IG9yZGVycy5kZWxldGVPbmUoeyBfaWQ6IG5ldyBPYmplY3RJZChvcmRlcl9pZCkgfSk7XHJcblxyXG4gICAgcmV0dXJuIHJlc3VsdDtcclxufVxyXG5cclxuXHJcbmV4cG9ydCB7XHJcbiAgICBjb25uZWN0RGF0YWJhc2UsXHJcbiAgICBlbnN1cmVDb2xsZWN0aW9ucyxcclxuICAgIGluc2VydFVzZXIsXHJcbiAgICBnZXRVc2VyLFxyXG4gICAgdmFsaWRhdGVMb2dpbixcclxuICAgIGluc2VydFNlZWQsXHJcbiAgICBnZXRTZWVkLFxyXG4gICAgZ2V0UHJvZHVjdHMsXHJcbiAgICBnZXRQcm9kdWN0LFxyXG4gICAgZ2V0Q2FydCxcclxuICAgIGFkZFRvQ2FydCxcclxuICAgIHJlbW92ZUZyb21DYXJ0LFxyXG4gICAgZ2V0V2lzaGxpc3QsXHJcbiAgICBhZGRUb1dpc2hsaXN0LFxyXG4gICAgcmVtb3ZlRnJvbVdpc2hsaXN0LFxyXG4gICAgZ2V0T3JkZXJzLFxyXG4gICAgYWRkT3JkZXIsXHJcbiAgICBkZWxldGVPcmRlcixcclxuICAgIGNsZWFyQ2FydCxcclxuICAgIGNsZWFyV2lzaGxpc3QsXHJcbiAgICBpbnNlcnRQZXQsXHJcbiAgICBnZXRQZXRzLFxyXG4gICAgZ2V0UGV0LFxyXG4gICAgZGVsZXRlUGV0LFxyXG4gICAgc2VhcmNoUHJvZHVjdHMsXHJcbn0iXSwibmFtZXMiOlsiT2JqZWN0SWQiLCJNb25nb0NsaWVudCIsInJlcXVpcmUiLCJzZWVkcHJvZHVjdHMiLCJjb25uZWN0RGF0YWJhc2UiLCJjbGllbnQiLCJjb25uZWN0IiwicHJvY2VzcyIsImVudiIsIk1PTkdPREJfVVJJIiwiZW5zdXJlQ29sbGVjdGlvbnMiLCJjb2xsZWN0aW9ucyIsImRiIiwiY29sbGVjdGlvbiIsImV4aXN0cyIsImxpc3RDb2xsZWN0aW9ucyIsIm5hbWUiLCJoYXNOZXh0IiwiY3JlYXRlQ29sbGVjdGlvbiIsInNlZWQiLCJnZXRTZWVkIiwic2VlZFByb2R1Y3RzIiwiY3JlYXRlSW5kZXgiLCJpbnNlcnRTZWVkIiwiZGF0ZSIsIkRhdGUiLCJpbnNlcnRQZXQiLCJwZXQiLCJwZXRzIiwicmVzdWx0IiwiaW5zZXJ0T25lIiwiZ2V0UGV0IiwiaWQiLCJmaW5kT25lIiwiX2lkIiwiZ2V0UGV0cyIsInVzZXJfaWQiLCJmaW5kIiwidG9BcnJheSIsImRlbGV0ZVBldCIsImRlbGV0ZU9uZSIsImluc2VydFVzZXIiLCJ1c2VyIiwidXNlcnMiLCJnZXRVc2VyIiwiZW1haWwiLCJ2YWxpZGF0ZUxvZ2luIiwicGFzc3dvcmQiLCJzZWVkcyIsInByb2RzIiwicHJvZHVjdHMiLCJpbnNlcnRNYW55IiwiZ2V0UHJvZHVjdHMiLCJmaWx0ZXIiLCJnZXRQcm9kdWN0IiwicHJvZHVjdCIsInNlYXJjaFByb2R1Y3RzIiwicXVlcnkiLCIkdGV4dCIsIiRzZWFyY2giLCJnZXRDYXJ0IiwiY2FydCIsIm5ld0NhcnQiLCJhZGRUb0NhcnQiLCJwcm9kdWN0X2lkIiwiaW5kZXgiLCJmaW5kSW5kZXgiLCJxdWFudGl0eSIsInB1c2giLCJ1cGRhdGVPbmUiLCIkc2V0IiwicmVtb3ZlRnJvbUNhcnQiLCJzcGxpY2UiLCJjb25zb2xlIiwibG9nIiwiY2xlYXJDYXJ0IiwibGVuZ3RoIiwiZ2V0V2lzaGxpc3QiLCJsaXN0IiwibmV3TGlzdCIsImFkZFRvV2lzaGxpc3QiLCJyZW1vdmVGcm9tV2lzaGxpc3QiLCJjbGVhcldpc2hsaXN0IiwiZ2V0T3JkZXJzIiwib3JkZXJzIiwic29ydCIsImFkZE9yZGVyIiwib3JkZXIiLCJkZWxldGVPcmRlciIsIm9yZGVyX2lkIl0sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./db/db.js\n");
+
+/***/ }),
+
+/***/ "./pages/products.js":
+/*!***************************!*\
+  !*** ./pages/products.js ***!
+  \***************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__),\n/* harmony export */   \"getServerSideProps\": () => (/* binding */ getServerSideProps)\n/* harmony export */ });\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ \"react/jsx-dev-runtime\");\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _components_Product__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/components/Product */ \"./components/Product.js\");\n/* harmony import */ var _db_db__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/db/db */ \"./db/db.js\");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react */ \"react\");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_3__);\n/* harmony import */ var toastr__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! toastr */ \"toastr\");\n/* harmony import */ var toastr__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(toastr__WEBPACK_IMPORTED_MODULE_4__);\n/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! next/router */ \"next/router\");\n/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(next_router__WEBPACK_IMPORTED_MODULE_5__);\n\n\n\n\n\n\nfunction products({ products  }) {\n    const router = (0,next_router__WEBPACK_IMPORTED_MODULE_5__.useRouter)();\n    const [user, setUser] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(null);\n    // loader\n    const [loading, setLoading] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(true);\n    const [hasParams, setHasParams] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(false);\n    // check if user is logged in, local storage\n    (0,react__WEBPACK_IMPORTED_MODULE_3__.useEffect)(()=>{\n        const user = JSON.parse(localStorage.getItem(\"user\"));\n        // if user is logged in, show profile\n        if (user) {\n            setUser(user);\n            setLoading(false);\n            // check if query params exist\n            if (router.query && router.query.q) {\n                setHasParams(true);\n            } else {\n                setHasParams(false);\n            }\n        } else {\n            // redirect to login page\n            window.location.href = \"/login\";\n        }\n    }, []);\n    // add product to cart\n    const addToCart = async (product)=>{\n        // send post request to /api/cart\n        const res = await fetch(\"/api/cart\", {\n            method: \"POST\",\n            headers: {\n                \"Content-Type\": \"application/json\"\n            },\n            body: JSON.stringify({\n                operation: \"add\",\n                user_id: user.id,\n                data: {\n                    product\n                }\n            })\n        });\n        // get response\n        const data = await res.json();\n        // if successful, add product to cart\n        if (data.success) {\n            toastr__WEBPACK_IMPORTED_MODULE_4___default().success(\"Successfully added to cart\");\n        } else {\n            toastr__WEBPACK_IMPORTED_MODULE_4___default().error(\"Failed to add to cart\");\n        }\n    };\n    // add product to wishlist\n    const addToWishlist = async (product)=>{\n        // send post request to /api/wishlist\n        const res = await fetch(\"/api/wishlist\", {\n            method: \"POST\",\n            headers: {\n                \"Content-Type\": \"application/json\"\n            },\n            body: JSON.stringify({\n                operation: \"add\",\n                user_id: user.id,\n                data: {\n                    product\n                }\n            })\n        });\n        // get response\n        const data = await res.json();\n        // if successful, add product to wishlist\n        if (data.success) {\n            toastr__WEBPACK_IMPORTED_MODULE_4___default().success(\"Successfully added to wishlist\");\n        } else {\n            toastr__WEBPACK_IMPORTED_MODULE_4___default().error(\"Failed to add to wishlist\");\n        }\n    };\n    return /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {\n        children: /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"div\", {\n            style: {\n                // linear gradient from #0073ff to #00c4ff\n                backgroundImage: \"linear-gradient(90deg, #0073ff 0%, #00c4ff 100%)\"\n            },\n            children: loading ? /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"div\", {\n                className: \"py-5 text-center text-light\",\n                children: /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"p\", {\n                    className: \"display-4 font-weight-bold\",\n                    children: \"Loading products...\"\n                }, void 0, false, {\n                    fileName: \"C:\\\\Users\\\\badaw\\\\OneDrive\\\\Documents\\\\Top Foodies\\\\Project-3\\\\pages\\\\products.js\",\n                    lineNumber: 106,\n                    columnNumber: 21\n                }, this)\n            }, void 0, false, {\n                fileName: \"C:\\\\Users\\\\badaw\\\\OneDrive\\\\Documents\\\\Top Foodies\\\\Project-3\\\\pages\\\\products.js\",\n                lineNumber: 105,\n                columnNumber: 17\n            }, this) : /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {\n                children: [\n                    /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"div\", {\n                        className: \"container\",\n                        children: [\n                            /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"div\", {\n                                className: \"clearfix\",\n                                children: [\n                                    /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"div\", {\n                                        className: \"float-left\",\n                                        children: hasParams ? /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"h1\", {\n                                            className: \"py-4 text-light\",\n                                            children: [\n                                                'Search results for \"',\n                                                router.query.q,\n                                                '\"'\n                                            ]\n                                        }, void 0, true, {\n                                            fileName: \"C:\\\\Users\\\\badaw\\\\OneDrive\\\\Documents\\\\Top Foodies\\\\Project-3\\\\pages\\\\products.js\",\n                                            lineNumber: 115,\n                                            columnNumber: 37\n                                        }, this) : /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"h1\", {\n                                            className: \"py-4 text-light\",\n                                            children: \"Shop stuff for your pets!\"\n                                        }, void 0, false, {\n                                            fileName: \"C:\\\\Users\\\\badaw\\\\OneDrive\\\\Documents\\\\Top Foodies\\\\Project-3\\\\pages\\\\products.js\",\n                                            lineNumber: 117,\n                                            columnNumber: 33\n                                        }, this)\n                                    }, void 0, false, {\n                                        fileName: \"C:\\\\Users\\\\badaw\\\\OneDrive\\\\Documents\\\\Top Foodies\\\\Project-3\\\\pages\\\\products.js\",\n                                        lineNumber: 112,\n                                        columnNumber: 29\n                                    }, this),\n                                    /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"div\", {\n                                        className: \"float-right\",\n                                        children: /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"a\", {\n                                            href: \"/cart\",\n                                            className: \"btn btn-lg btn-light mt-4\",\n                                            children: \"View cart\"\n                                        }, void 0, false, {\n                                            fileName: \"C:\\\\Users\\\\badaw\\\\OneDrive\\\\Documents\\\\Top Foodies\\\\Project-3\\\\pages\\\\products.js\",\n                                            lineNumber: 121,\n                                            columnNumber: 33\n                                        }, this)\n                                    }, void 0, false, {\n                                        fileName: \"C:\\\\Users\\\\badaw\\\\OneDrive\\\\Documents\\\\Top Foodies\\\\Project-3\\\\pages\\\\products.js\",\n                                        lineNumber: 120,\n                                        columnNumber: 29\n                                    }, this)\n                                ]\n                            }, void 0, true, {\n                                fileName: \"C:\\\\Users\\\\badaw\\\\OneDrive\\\\Documents\\\\Top Foodies\\\\Project-3\\\\pages\\\\products.js\",\n                                lineNumber: 111,\n                                columnNumber: 25\n                            }, this),\n                            products.map((product)=>/*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"div\", {\n                                    children: /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(_components_Product__WEBPACK_IMPORTED_MODULE_1__[\"default\"], {\n                                        product: product,\n                                        addToCart: addToCart,\n                                        addToWishlist: addToWishlist\n                                    }, void 0, false, {\n                                        fileName: \"C:\\\\Users\\\\badaw\\\\OneDrive\\\\Documents\\\\Top Foodies\\\\Project-3\\\\pages\\\\products.js\",\n                                        lineNumber: 126,\n                                        columnNumber: 33\n                                    }, this)\n                                }, product.id, false, {\n                                    fileName: \"C:\\\\Users\\\\badaw\\\\OneDrive\\\\Documents\\\\Top Foodies\\\\Project-3\\\\pages\\\\products.js\",\n                                    lineNumber: 125,\n                                    columnNumber: 29\n                                }, this))\n                        ]\n                    }, void 0, true, {\n                        fileName: \"C:\\\\Users\\\\badaw\\\\OneDrive\\\\Documents\\\\Top Foodies\\\\Project-3\\\\pages\\\\products.js\",\n                        lineNumber: 110,\n                        columnNumber: 21\n                    }, this),\n                    /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"div\", {\n                        className: \"py-5\"\n                    }, void 0, false, {\n                        fileName: \"C:\\\\Users\\\\badaw\\\\OneDrive\\\\Documents\\\\Top Foodies\\\\Project-3\\\\pages\\\\products.js\",\n                        lineNumber: 130,\n                        columnNumber: 21\n                    }, this),\n                    /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"div\", {\n                        className: \"py-5\"\n                    }, void 0, false, {\n                        fileName: \"C:\\\\Users\\\\badaw\\\\OneDrive\\\\Documents\\\\Top Foodies\\\\Project-3\\\\pages\\\\products.js\",\n                        lineNumber: 131,\n                        columnNumber: 21\n                    }, this)\n                ]\n            }, void 0, true)\n        }, void 0, false, {\n            fileName: \"C:\\\\Users\\\\badaw\\\\OneDrive\\\\Documents\\\\Top Foodies\\\\Project-3\\\\pages\\\\products.js\",\n            lineNumber: 99,\n            columnNumber: 9\n        }, this)\n    }, void 0, false);\n}\n// get server-side props\nasync function getServerSideProps(context) {\n    // get db\n    const client = await (0,_db_db__WEBPACK_IMPORTED_MODULE_2__.connectDatabase)();\n    // ensure collections exist\n    await (0,_db_db__WEBPACK_IMPORTED_MODULE_2__.ensureCollections)(client);\n    // get db\n    const db = client.db();\n    let products = [];\n    // has query\n    if (context.query && context.query.q) {\n        // search by name\n        if (context.query.q) {\n            products = await (0,_db_db__WEBPACK_IMPORTED_MODULE_2__.searchProducts)(db, context.query.q);\n        }\n    } else {\n        // get products\n        products = await (0,_db_db__WEBPACK_IMPORTED_MODULE_2__.getProducts)(db, {});\n    }\n    const filteredProducts = products.map((product)=>{\n        return {\n            id: product._id.toString(),\n            name: product.name,\n            image: product.image_file,\n            price: product.price,\n            description: product.prod_description,\n            quantity: product.quantity,\n            age_preferred: product.age_preferred\n        };\n    });\n    // return products\n    return {\n        props: {\n            products: filteredProducts\n        }\n    };\n}\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (products);\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,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QixRQUFRZ0MsVUFBVTtZQUN6QkMsT0FBT2pDLFFBQVFpQyxLQUFLO1lBQ3BCQyxhQUFhbEMsUUFBUW1DLGdCQUFnQjtZQUNyQ0MsVUFBVXBDLFFBQVFvQyxRQUFRO1lBQzFCQyxlQUFlckMsUUFBUXFDLGFBQWE7UUFDeEM7SUFDSjtJQUdBLGtCQUFrQjtJQUNsQixPQUFPO1FBQ0hDLE9BQU87WUFDSHhELFVBQVU2QztRQUNkO0lBQ0o7QUFDSixDQUFDO0FBRUQsaUVBQWU3QyxRQUFRQSxFQUFDIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vcGF3c2l0aXZlbHkvLi9wYWdlcy9wcm9kdWN0cy5qcz8zMTY2Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBQcm9kdWN0IGZyb20gXCJAL2NvbXBvbmVudHMvUHJvZHVjdFwiO1xyXG5pbXBvcnQgeyBjb25uZWN0RGF0YWJhc2UsIGVuc3VyZUNvbGxlY3Rpb25zLCBnZXRQcm9kdWN0cywgc2VhcmNoUHJvZHVjdHMgfSBmcm9tIFwiQC9kYi9kYlwiO1xyXG5pbXBvcnQgeyB1c2VFZmZlY3QsIHVzZVN0YXRlIH0gZnJvbSBcInJlYWN0XCI7XHJcbmltcG9ydCB0b2FzdHIgZnJvbSBcInRvYXN0clwiO1xyXG5pbXBvcnQgeyB1c2VSb3V0ZXIgfSBmcm9tICduZXh0L3JvdXRlcidcclxuXHJcbmZ1bmN0aW9uIHByb2R1Y3RzKHsgcHJvZHVjdHMgfSkge1xyXG4gICAgY29uc3Qgcm91dGVyID0gdXNlUm91dGVyKCk7XHJcblxyXG4gICAgY29uc3QgW3VzZXIsIHNldFVzZXJdID0gdXNlU3RhdGUobnVsbCk7XHJcblxyXG4gICAgLy8gbG9hZGVyXHJcbiAgICBjb25zdCBbbG9hZGluZywgc2V0TG9hZGluZ10gPSB1c2VTdGF0ZSh0cnVlKTtcclxuICAgIGNvbnN0IFtoYXNQYXJhbXMsIHNldEhhc1BhcmFtc10gPSB1c2VTdGF0ZShmYWxzZSk7XHJcblxyXG4gICAgLy8gY2hlY2sgaWYgdXNlciBpcyBsb2dnZWQgaW4sIGxvY2FsIHN0b3JhZ2VcclxuICAgIHVzZUVmZmVjdCgoKSA9PiB7XHJcbiAgICAgICAgY29uc3QgdXNlciA9IEpTT04ucGFyc2UobG9jYWxTdG9yYWdlLmdldEl0ZW0oXCJ1c2VyXCIpKTtcclxuXHJcbiAgICAgICAgLy8gaWYgdXNlciBpcyBsb2dnZWQgaW4sIHNob3cgcHJvZmlsZVxyXG4gICAgICAgIGlmICh1c2VyKSB7XHJcbiAgICAgICAgICAgIHNldFVzZXIodXNlcik7XHJcbiAgICAgICAgICAgIHNldExvYWRpbmcoZmFsc2UpO1xyXG5cclxuICAgICAgICAgICAgLy8gY2hlY2sgaWYgcXVlcnkgcGFyYW1zIGV4aXN0XHJcbiAgICAgICAgICAgIGlmIChyb3V0ZXIucXVlcnkgJiYgcm91dGVyLnF1ZXJ5LnEpIHtcclxuICAgICAgICAgICAgICAgIHNldEhhc1BhcmFtcyh0cnVlKTtcclxuICAgICAgICAgICAgfSBlbHNlIHtcclxuICAgICAgICAgICAgICAgIHNldEhhc1BhcmFtcyhmYWxzZSk7XHJcbiAgICAgICAgICAgIH1cclxuICAgICAgICB9IGVsc2Uge1xyXG4gICAgICAgICAgICAvLyByZWRpcmVjdCB0byBsb2dpbiBwYWdlXHJcbiAgICAgICAgICAgIHdpbmRvdy5sb2NhdGlvbi5ocmVmID0gXCIvbG9naW5cIjtcclxuICAgICAgICB9XHJcbiAgICB9LCBbXSk7XHJcblxyXG4gICAgLy8gYWRkIHByb2R1Y3QgdG8gY2FydFxyXG4gICAgY29uc3QgYWRkVG9DYXJ0ID0gYXN5bmMgKHByb2R1Y3QpID0+IHtcclxuICAgICAgICAvLyBzZW5kIHBvc3QgcmVxdWVzdCB0byAvYXBpL2NhcnRcclxuICAgICAgICBjb25zdCByZXMgPSBhd2FpdCBmZXRjaChcIi9hcGkvY2FydFwiLCB7XHJcbiAgICAgICAgICAgIG1ldGhvZDogXCJQT1NUXCIsXHJcbiAgICAgICAgICAgIGhlYWRlcnM6IHtcclxuICAgICAgICAgICAgICAgIFwiQ29udGVudC1UeXBlXCI6IFwiYXBwbGljYXRpb24vanNvblwiLFxyXG4gICAgICAgICAgICB9LFxyXG4gICAgICAgICAgICBib2R5OiBKU09OLnN0cmluZ2lmeSh7XHJcbiAgICAgICAgICAgICAgICBvcGVyYXRpb246IFwiYWRkXCIsXHJcbiAgICAgICAgICAgICAgICB1c2VyX2lkOiB1c2VyLmlkLFxyXG4gICAgICAgICAgICAgICAgZGF0YToge1xyXG4gICAgICAgICAgICAgICAgICAgIHByb2R1Y3QsXHJcbiAgICAgICAgICAgICAgICB9LFxyXG4gICAgICAgICAgICB9KSxcclxuICAgICAgICB9KTtcclxuXHJcbiAgICAgICAgLy8gZ2V0IHJlc3BvbnNlXHJcbiAgICAgICAgY29uc3QgZGF0YSA9IGF3YWl0IHJlcy5qc29uKCk7XHJcblxyXG4gICAgICAgIC8vIGlmIHN1Y2Nlc3NmdWwsIGFkZCBwcm9kdWN0IHRvIGNhcnRcclxuICAgICAgICBpZiAoZGF0YS5zdWNjZXNzKSB7XHJcbiAgICAgICAgICAgIHRvYXN0ci5zdWNjZXNzKFwiU3VjY2Vzc2Z1bGx5IGFkZGVkIHRvIGNhcnRcIik7XHJcbiAgICAgICAgfVxyXG4gICAgICAgIC8vIGlmIGZhaWxlZCwgc2hvdyBlcnJvclxyXG4gICAgICAgIGVsc2Uge1xyXG4gICAgICAgICAgICB0b2FzdHIuZXJyb3IoXCJGYWlsZWQgdG8gYWRkIHRvIGNhcnRcIik7XHJcbiAgICAgICAgfVxyXG4gICAgfVxyXG5cclxuICAgIC8vIGFkZCBwcm9kdWN0IHRvIHdpc2hsaXN0XHJcbiAgICBjb25zdCBhZGRUb1dpc2hsaXN0ID0gYXN5bmMgKHByb2R1Y3QpID0+IHtcclxuICAgICAgICAvLyBzZW5kIHBvc3QgcmVxdWVzdCB0byAvYXBpL3dpc2hsaXN0XHJcbiAgICAgICAgY29uc3QgcmVzID0gYXdhaXQgZmV0Y2goXCIvYXBpL3dpc2hsaXN0XCIsIHtcclxuICAgICAgICAgICAgbWV0aG9kOiBcIlBPU1RcIixcclxuICAgICAgICAgICAgaGVhZGVyczoge1xyXG4gICAgICAgICAgICAgICAgXCJDb250ZW50LVR5cGVcIjogXCJhcHBsaWNhdGlvbi9qc29uXCIsXHJcbiAgICAgICAgICAgIH0sXHJcbiAgICAgICAgICAgIGJvZHk6IEpTT04uc3RyaW5naWZ5KHtcclxuICAgICAgICAgICAgICAgIG9wZXJhdGlvbjogXCJhZGRcIixcclxuICAgICAgICAgICAgICAgIHVzZXJfaWQ6IHVzZXIuaWQsXHJcbiAgICAgICAgICAgICAgICBkYXRhOiB7XHJcbiAgICAgICAgICAgICAgICAgICAgcHJvZHVjdCxcclxuICAgICAgICAgICAgICAgIH0sXHJcbiAgICAgICAgICAgIH0pLFxyXG4gICAgICAgIH0pO1xyXG5cclxuICAgICAgICAvLyBnZXQgcmVzcG9uc2VcclxuICAgICAgICBjb25zdCBkYXRhID0gYXdhaXQgcmVzLmpzb24oKTtcclxuXHJcbiAgICAgICAgLy8gaWYgc3VjY2Vzc2Z1bCwgYWRkIHByb2R1Y3QgdG8gd2lzaGxpc3RcclxuICAgICAgICBpZiAoZGF0YS5zdWNjZXNzKSB7XHJcbiAgICAgICAgICAgIHRvYXN0ci5zdWNjZXNzKFwiU3VjY2Vzc2Z1bGx5IGFkZGVkIHRvIHdpc2hsaXN0XCIpO1xyXG4gICAgICAgIH1cclxuICAgICAgICAvLyBpZiBmYWlsZWQsIHNob3cgZXJyb3JcclxuICAgICAgICBlbHNlIHtcclxuICAgICAgICAgICAgdG9hc3RyLmVycm9yKFwiRmFpbGVkIHRvIGFkZCB0byB3aXNobGlzdFwiKTtcclxuICAgICAgICB9XHJcblxyXG4gICAgfVxyXG5cclxuICAgIHJldHVybiAoPD5cclxuICAgICAgICA8ZGl2IHN0eWxlPXt7XHJcbiAgICAgICAgICAgIC8vIGxpbmVhciBncmFkaWVudCBmcm9tICMwMDczZmYgdG8gIzAwYzRmZlxyXG4gICAgICAgICAgICBiYWNrZ3JvdW5kSW1hZ2U6IFwibGluZWFyLWdyYWRpZW50KDkwZGVnLCAjMDA3M2ZmIDAlLCAjMDBjNGZmIDEwMCUpXCIsXHJcbiAgICAgICAgfX0+XHJcbiAgICAgICAgICAgIHsvKiBpZiBsb2FkaW5nICovfVxyXG4gICAgICAgICAgICB7bG9hZGluZyA/IChcclxuICAgICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPSdweS01IHRleHQtY2VudGVyIHRleHQtbGlnaHQnPlxyXG4gICAgICAgICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT0nZGlzcGxheS00IGZvbnQtd2VpZ2h0LWJvbGQnPkxvYWRpbmcgcHJvZHVjdHMuLi48L3A+XHJcbiAgICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgICAgKSA6IChcclxuICAgICAgICAgICAgICAgIDw+XHJcbiAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJjb250YWluZXJcIj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJjbGVhcmZpeFwiPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJmbG9hdC1sZWZ0XCI+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgey8qIGlmIGhhcyBwYXJhbXMgKi99XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAge2hhc1BhcmFtcyA/IChcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPGgxIGNsYXNzTmFtZT1cInB5LTQgdGV4dC1saWdodFwiPlNlYXJjaCByZXN1bHRzIGZvciBcIntyb3V0ZXIucXVlcnkucX1cIjwvaDE+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKSA6IChcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8aDEgY2xhc3NOYW1lPVwicHktNCB0ZXh0LWxpZ2h0XCI+U2hvcCBzdHVmZiBmb3IgeW91ciBwZXRzITwvaDE+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKX1cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJmbG9hdC1yaWdodFwiPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxhIGhyZWY9XCIvY2FydFwiIGNsYXNzTmFtZT1cImJ0biBidG4tbGcgYnRuLWxpZ2h0IG10LTRcIj5WaWV3IGNhcnQ8L2E+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIHtwcm9kdWN0cy5tYXAoKHByb2R1Y3QpID0+IChcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxkaXYga2V5PXtwcm9kdWN0LmlkfT5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8UHJvZHVjdCBwcm9kdWN0PXtwcm9kdWN0fSBhZGRUb0NhcnQ9e2FkZFRvQ2FydH0gYWRkVG9XaXNobGlzdD17YWRkVG9XaXNobGlzdH0gLz5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgICAgICAgICAgICAgICAgICApKX1cclxuICAgICAgICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT0ncHktNSc+PC9kaXY+XHJcbiAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9J3B5LTUnPjwvZGl2PlxyXG4gICAgICAgICAgICAgICAgPC8+XHJcbiAgICAgICAgICAgICl9XHJcbiAgICAgICAgPC9kaXY+XHJcbiAgICA8Lz4pXHJcbn1cclxuXHJcbi8vIGdldCBzZXJ2ZXItc2lkZSBwcm9wc1xyXG5leHBvcnQgYXN5bmMgZnVuY3Rpb24gZ2V0U2VydmVyU2lkZVByb3BzKGNvbnRleHQpIHtcclxuICAgIC8vIGdldCBkYlxyXG4gICAgY29uc3QgY2xpZW50ID0gYXdhaXQgY29ubmVjdERhdGFiYXNlKCk7XHJcblxyXG4gICAgLy8gZW5zdXJlIGNvbGxlY3Rpb25zIGV4aXN0XHJcbiAgICBhd2FpdCBlbnN1cmVDb2xsZWN0aW9ucyhjbGllbnQpO1xyXG5cclxuICAgIC8vIGdldCBkYlxyXG4gICAgY29uc3QgZGIgPSBjbGllbnQuZGIoKTtcclxuXHJcbiAgICBsZXQgcHJvZHVjdHMgPSBbXTtcclxuICAgIC8vIGhhcyBxdWVyeVxyXG4gICAgaWYgKGNvbnRleHQucXVlcnkgJiYgY29udGV4dC5xdWVyeS5xKSB7XHJcbiAgICAgICAgLy8gc2VhcmNoIGJ5IG5hbWVcclxuICAgICAgICBpZiAoY29udGV4dC5xdWVyeS5xKSB7XHJcbiAgICAgICAgICAgIHByb2R1Y3RzID0gYXdhaXQgc2VhcmNoUHJvZHVjdHMoZGIsIGNvbnRleHQucXVlcnkucSk7XHJcbiAgICAgICAgfVxyXG4gICAgfSBlbHNlIHtcclxuICAgICAgICAvLyBnZXQgcHJvZHVjdHNcclxuICAgICAgICBwcm9kdWN0cyA9IGF3YWl0IGdldFByb2R1Y3RzKGRiLCB7fSk7XHJcbiAgICB9XHJcblxyXG4gICAgY29uc3QgZmlsdGVyZWRQcm9kdWN0cyA9IHByb2R1Y3RzLm1hcCgocHJvZHVjdCkgPT4ge1xyXG4gICAgICAgIHJldHVybiB7XHJcbiAgICAgICAgICAgIGlkOiBwcm9kdWN0Ll9pZC50b1N0cmluZygpLFxyXG4gICAgICAgICAgICBuYW1lOiBwcm9kdWN0Lm5hbWUsXHJcbiAgICAgICAgICAgIGltYWdlOiBwcm9kdWN0LmltYWdlX2ZpbGUsXHJcbiAgICAgICAgICAgIHByaWNlOiBwcm9kdWN0LnByaWNlLFxyXG4gICAgICAgICAgICBkZXNjcmlwdGlvbjogcHJvZHVjdC5wcm9kX2Rlc2NyaXB0aW9uLFxyXG4gICAgICAgICAgICBxdWFudGl0eTogcHJvZHVjdC5xdWFudGl0eSxcclxuICAgICAgICAgICAgYWdlX3ByZWZlcnJlZDogcHJvZHVjdC5hZ2VfcHJlZmVycmVkLFxyXG4gICAgICAgIH1cclxuICAgIH0pO1xyXG5cclxuXHJcbiAgICAvLyByZXR1cm4gcHJvZHVjdHNcclxuICAgIHJldHVybiB7XHJcbiAgICAgICAgcHJvcHM6IHtcclxuICAgICAgICAgICAgcHJvZHVjdHM6IGZpbHRlcmVkUHJvZHVjdHMsXHJcbiAgICAgICAgfVxyXG4gICAgfVxyXG59XHJcblxyXG5leHBvcnQgZGVmYXVsdCBwcm9kdWN0czsiXSwibmFtZXMiOlsiUHJvZHVjdCIsImNvbm5lY3REYXRhYmFzZSIsImVuc3VyZUNvbGxlY3Rpb25zIiwiZ2V0UHJvZHVjdHMiLCJzZWFyY2hQcm9kdWN0cyIsInVzZUVmZmVjdCIsInVzZVN0YXRlIiwidG9hc3RyIiwidXNlUm91dGVyIiwicHJvZHVjdHMiLCJyb3V0ZXIiLCJ1c2VyIiwic2V0VXNlciIsImxvYWRpbmciLCJzZXRMb2FkaW5nIiwiaGFzUGFyYW1zIiwic2V0SGFzUGFyYW1zIiwiSlNPTiIsInBhcnNlIiwibG9jYWxTdG9yYWdlIiwiZ2V0SXRlbSIsInF1ZXJ5IiwicSIsIndpbmRvdyIsImxvY2F0aW9uIiwiaHJlZiIsImFkZFRvQ2FydCIsInByb2R1Y3QiLCJyZXMiLCJmZXRjaCIsIm1ldGhvZCIsImhlYWRlcnMiLCJib2R5Iiwic3RyaW5naWZ5Iiwib3BlcmF0aW9uIiwidXNlcl9pZCIsImlkIiwiZGF0YSIsImpzb24iLCJzdWNjZXNzIiwiZXJyb3IiLCJhZGRUb1dpc2hsaXN0IiwiZGl2Iiwic3R5bGUiLCJiYWNrZ3JvdW5kSW1hZ2UiLCJjbGFzc05hbWUiLCJwIiwiaDEiLCJhIiwibWFwIiwiZ2V0U2VydmVyU2lkZVByb3BzIiwiY29udGV4dCIsImNsaWVudCIsImRiIiwiZmlsdGVyZWRQcm9kdWN0cyIsIl9pZCIsInRvU3RyaW5nIiwibmFtZSIsImltYWdlIiwiaW1hZ2VfZmlsZSIsInByaWNlIiwiZGVzY3JpcHRpb24iLCJwcm9kX2Rlc2NyaXB0aW9uIiwicXVhbnRpdHkiLCJhZ2VfcHJlZmVycmVkIiwicHJvcHMiXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./pages/products.js\n");
+
+/***/ }),
+
+/***/ "mongodb":
+/*!**************************!*\
+  !*** external "mongodb" ***!
+  \**************************/
 /***/ ((module) => {
 
 module.exports = require("mongodb");
 
 /***/ }),
 
-/***/ 1853:
+/***/ "next/router":
+/*!******************************!*\
+  !*** external "next/router" ***!
+  \******************************/
 /***/ ((module) => {
 
 module.exports = require("next/router");
 
 /***/ }),
 
-/***/ 6689:
+/***/ "react":
+/*!************************!*\
+  !*** external "react" ***!
+  \************************/
 /***/ ((module) => {
 
 module.exports = require("react");
 
 /***/ }),
 
-/***/ 997:
+/***/ "react/jsx-dev-runtime":
+/*!****************************************!*\
+  !*** external "react/jsx-dev-runtime" ***!
+  \****************************************/
 /***/ ((module) => {
 
-module.exports = require("react/jsx-runtime");
+module.exports = require("react/jsx-dev-runtime");
 
 /***/ }),
 
-/***/ 4559:
+/***/ "toastr":
+/*!*************************!*\
+  !*** external "toastr" ***!
+  \*************************/
 /***/ ((module) => {
 
 module.exports = require("toastr");
 
 /***/ }),
 
-/***/ 9125:
+/***/ "./db/productsData.json":
+/*!******************************!*\
+  !*** ./db/productsData.json ***!
+  \******************************/
 /***/ ((module) => {
 
-module.exports = JSON.parse('[{"name":"Blue Buffalo Life Protection Formula Puppy Chicken & Brown Rice Recipe Dry Dog Food","prod_description":"Formulated to support your puppy\'s healthy growth and development.","price":74.99,"quantity":20,"image_file":"/images/lpf_dog_dry_puppy_chickenbrownrice_mobile.jpg","allergens":false,"age_preferred":1},{"name":"Kong Classic Dog Toy, Large","prod_description":"This is a test","price":49.99,"quantity":9999,"image_file":"/images/product_images/T4_LIFE_1.jpg","allergens":false,"age_preferred":5},{"name":"Kong Classic Dog Toy, Small","prod_description":"This is a test","price":39.99,"quantity":36,"image_file":"/images/product_images/T4_LIFE_1.jpg","allergens":false,"age_preferred":1},{"name":"Blue Buffalor Life Protection Formula Beef Recipe Dry Dog Food","prod_description":"Formulated for the health and well-being of dogs.","price":89.61,"quantity":2,"image_file":"/images/product_images/lpf_dog_dry_adult_beefbrownrice_mobile.jpg","allergens":false,"age_preferred":5},{"name":"Blue Buffalo Life Protection Formula Senior Chicken & Brown Rice Recipe Dry Dog Food","prod_description":"Formulated for the health and well-being of senior dogs.","price":42.96,"quantity":69,"image_file":"/images/product_images/lpf_dog_dry_senior_chickenbrownrice_mobile.jpg","allergens":false,"age_preferred":10},{"name":"Blue Buffalo Baby Blue Formula High-Protein, Grain-Free Chicken and Pea Recipe, Dry Cat Food","prod_description":"Formulated for the health and well-being of senior dogs.","price":49.99,"quantity":1,"image_file":"/images/product_images/babyblue_cat_dry_hpchickenpea_mobile.jpg","allergens":false,"age_preferred":0},{"name":"BLUE Tastefuls Indoor Hairball Control, Chicken and Brown Rice Recipe, Dry Cat Food","prod_description":"Formulated for the health and well-being of senior dogs.","price":22,"quantity":900000,"image_file":"/images/product_images/pdp_mobile_tastefuls_dry_hairball.jpg","allergens":false,"age_preferred":5},{"name":"BLUE Wilderness Mature Chicken Recipe, Dry Cat Food","prod_description":"Formulated for the health and well-being of senior dogs.","price":75,"quantity":499,"image_file":"/images/product_images/wild_cat_dry_mature_chicken_mobile.jpg","allergens":false,"age_preferred":10},{"name":"Frisco Paw & Play Mouse Cat Toy, 10-Pack","prod_description":"Drive your kitty wild with the sights, sounds and feels they love to play with. Lets get ready to bat, swat and purr!","price":20.98,"quantity":0,"image_file":"/images/product_images/166366_Main._AC_SS108_V1573593232_.jpg","allergens":false,"age_preferred":1},{"name":"PawsPets Exclusive Cat Back Scratcher...Limited Edition","prod_description":"Limited Edition small back scratcher for the most important members of the family.","price":12000.21,"quantity":100,"image_file":"/images/product_images/th.jpg","allergens":true,"age_preferred":5},{"name":"PawsPets Exclusive Cat Tower ","prod_description":"PawsPets new cat tower filled with amnenties for your cats.","price":347,"quantity":9,"image_file":"/images/product_images/CatTower.jpg","allergens":false,"age_preferred":5},{"name":"PawsPets Exclusive 18kt Solid Gold Dog Leash","prod_description":"","price":36876.56,"quantity":2,"image_file":"/images/product_images/IcedOutDoggy.jpg","allergens":false,"age_preferred":5},{"name":"Diamond Dog Collar","prod_description":"Do you have Bottomless Pockets?","price":150500,"quantity":0,"image_file":"/images/product_images/150k.jpg","allergens":false,"age_preferred":10},{"name":"AMOUR AMOUR DIAMOND DOG COLLAR","prod_description":"The Buggati of Dog Collars","price":4000000,"quantity":1,"image_file":"/images/product_images/1_Amour_Amour_Diamond_Dog_Collar_-_3_million_-_Most_Expensive_Dog_Collars.jpg","allergens":false,"age_preferred":5},{"name":"AMOUR DE LA MER","prod_description":"The price says enough...","price":1000000,"quantity":99,"image_file":"/images/product_images/2_Amour_de_la_Mer_-_Most_Expensive_Dog_Collars.jpg","allergens":false,"age_preferred":5},{"name":"Versace MEDUSA PET LEAD","prod_description":"A leather pet lead decorated with Medusa studs. ","price":40000,"quantity":89,"image_file":"/images/product_images/90_ZDOGLACE4-ZPEL0061_Z1008_20_MedusaPetLead-PetAccessories-versace-online-store_0_1.jpg","allergens":false,"age_preferred":5},{"name":"FurryFriends Deluxe Dog Bed","prod_description":"FurryFriends cozy and comfortable dog bed for your furry companion.","price":159.99,"quantity":23,"image_file":"/images/product_images/dogobedo.jpg","allergens":false,"age_preferred":5},{"name":"CritterPlay Exotic Bird Toy Set","prod_description":"CritterPlay colorful and interactive toy set for exotic birds.","price":49.95,"quantity":14,"image_file":"/images/product_images/BirdToys.jpg","allergens":true,"age_preferred":5},{"name":"FishFrenzy Aquarium Starter Kit","prod_description":"FishFrenzy aquarium starter kit includes everything you need to start an aquarium.","price":89.99,"quantity":8,"image_file":"/images/product_images/FishFrenzy.jpg","allergens":false,"age_preferred":18},{"name":"HamsterHaven Playpen","prod_description":"HamsterHaven playpen for your furry little friend to play and explore.","price":29.95,"quantity":20,"image_file":"/images/product_images/HamsterHaven.jpg","allergens":false,"age_preferred":5},{"name":"ReptileRetreat Terrarium Kit","prod_description":"ReptileRetreat terrarium kit includes everything you need to create a comfortable habitat for your reptile.","price":149.99,"quantity":5,"image_file":"/images/product_images/Reptile.jpg","allergens":false,"age_preferred":16},{"name":"FeatheredFriends Wild Bird Feeder","prod_description":"FeatheredFriends wild bird feeder for your outdoor feathered friends.","price":209.99,"quantity":32,"image_file":"/images/product_images/BirdFeed.jpg","allergens":false,"age_preferred":5},{"name":"AquaticWonders Betta Fish Bowl","prod_description":"AquaticWonders betta fish bowl for your betta fish.","price":49.99,"quantity":18,"image_file":"/images/product_images/Beta.jpg","allergens":false,"age_preferred":5},{"name":"PetSafe Automatic Feeder","prod_description":"PetSafe automatic feeder to keep your pet fed even when you\'re not home.","price":59.95,"quantity":6,"image_file":"/images/product_images/Autofeed.jpg","allergens":false,"age_preferred":5},{"name":"CritterCraze Small Animal Cage","prod_description":"CritterCraze small animal cage for your pet rodents and other small animals.","price":79.95,"quantity":12,"image_file":"/images/product_images/Small.jpg","allergens":false,"age_preferred":5},{"name":"Fido\'s Fashion Collar","prod_description":"Fido\'s Fashion Collar is a stylish accessory for your dog to wear on walks and outings.","price":24.99,"quantity":15,"image_file":"/images/product_images/Fiddo.jpg","allergens":false,"age_preferred":5},{"name":"Whisker\'s Delight Cat Food","prod_description":"Whisker\'s Delight cat food is a nutritious and delicious meal for your feline friend.","price":34.99,"quantity":25,"image_file":"/images/product_images/Whiskers.jpg","allergens":true,"age_preferred":5},{"name":"Robot Dog","prod_description":"Robot dog with feeling and a mind of its own.","price":74000.99,"quantity":8,"image_file":"/images/product_images/robodog.jpg","allergens":false,"age_preferred":5},{"name":"Purrfect Paradise Scratching Post","prod_description":"Purrfect Paradise scratching post is a great way for your cat to satisfy their scratching instincts.","price":99.99,"quantity":10,"image_file":"/images/product_images/CatScratcher.jpg","allergens":false,"age_preferred":5},{"name":"Fluffy Fleece Pet Bed","prod_description":"Fluffy Fleece Pet Bed is a cozy bed for your furry friend to snuggle up in.","price":309.99,"quantity":20,"image_file":"/images/product_images/PetBed.jpg","allergens":false,"age_preferred":5},{"name":"Canine Camo Dog Harness","prod_description":"Canine Camo Dog Harness is a durable and stylish harness for your dog to wear on walks and hikes.","price":409.99,"quantity":7,"image_file":"/images/product_images/Canine.jpg","allergens":false,"age_preferred":5},{"name":"Gourmet Fish Flakes","prod_description":"Gourmet Fish Flakes are a delicious and nutritious food for your aquarium fish.","price":99.99,"quantity":30,"image_file":"/images/product_images/FishyFlakes.jpg","allergens":false,"age_preferred":5},{"name":"Paw Print Litter Mat","prod_description":"Paw Print Litter Mat helps keep your floors clean by trapping litter and dirt from your cat\'s paws.","price":54.99,"quantity":13,"image_file":"/images/product_images/PawP.jpg","allergens":false,"age_preferred":5},{"name":"Avian Adventures Bird Cage","prod_description":"Avian Adventures bird cage is a spacious and comfortable home for your pet bird.","price":449.99,"quantity":4,"image_file":"/images/product_images/BirdPrison.jpg","allergens":false,"age_preferred":5},{"name":"Wagging Tail Dog Treats","prod_description":"Wagging Tail Dog Treats are a delicious and healthy snack for your pup.","price":17.99,"quantity":40,"image_file":"/images/product_images/Mixed-Treat-Box.jpg","allergens":true,"age_preferred":5},{"name":"Aquatic Plants Pack","prod_description":"Aquatic Plants Pack includes a variety of plants to add to your aquarium for decoration and oxygenation.","price":190.99,"quantity":15,"image_file":"/images/product_images/bba166191939747992737ce8442988ad.jpg","allergens":false,"age_preferred":5}]');
+module.exports = JSON.parse('[{"name":"Crispy Rosemary Chicken and Fries","prod_description":"Potatoes are crispy like french fries, just serve with ketchup.  Kids love this!","price":24.99,"quantity":20,"image_file":"/images/rosemary_chicken_with_potatoes.png","ingredients":"chicken, potatoes, olive oil, rosemary, oregano, garlic powder, salt, pepper"},{"name":"Slow Cooked Baby Back Ribs","prod_description":"Ribs cooked to perfection","price":21.99,"quantity":60,"image_file":"/images/baby_back_ribs.png","ingredients":"baby back ribs, salt, black pepper, water, onion, garlic, barbeque sauce"},{"name":"Worlds Best Honey Garlic Pork Chops","prod_description":"Plain old pork chops turned into something special","price":15.99,"quantity":36,"image_file":"/images/worlds_best_pork_chops.png","ingredients":"ketchup, honey, soy sauce, garlic, pork chops"},{"name":"Chicken, Sausage, Peppers, and Potatoes","prod_description":"Chicken, sausage, peppers, and potatoes","price":13.99,"quantity":10,"image_file":"/images/chicken_sausage_pepper_potatoes.png","ingredients":"olive oil, hot Italian sausage, chicken, sweet peppers, potatoes, red onion, yellow onion, Italian herbs, kosher salt, black pepper, Italian parsley"},{"name":"Mississippi Roast - Slow Cooked Pepperoncini Pot Roast","prod_description":"Serve with mashed potatoes or egg noodles.","price":18.99,"quantity":8,"image_file":"/images/pepperoncini_pot_roast.png","ingredients":"beef chuck roast, butter, pepperoncini peppers, ranch dressing mix, au jus mix"},{"name":"Sheet Pan Chicken Fajitas","prod_description":"Quick and flavorfull chicken fajitas.","price":12.99,"quantity":50,"image_file":"/images/sheet_pan_chicken_fajitas.png","ingredients":"vegetable oil, chili powder, oregano, garlic, onion, cumin, salt, pepper, cayenne pepper, chicken, bell peppers, onion, cilantro, lime"},{"name":"Fiesta Slow Cooked Shredded Chicken Tacos","prod_description":"Delicious chicken tacos. Combine with cheese, lettuce, tomatoes, and onions for a taste treat","price":10,"quantity":100,"image_file":"/images/fiesta_shredded_chicken_tacos.png","ingredients":"chicken broth, taco seasoning mix, chicken"},{"name":"Crispy Oven-Roasted Rosemary Chicken with Sausage and Potatoes","prod_description":"Easy pot roast shortcut.","price":19.99,"quantity":18,"image_file":"/images/rosemary_chicken_sausage_potatoes.png","ingredients":"olive oil, bratwurst, chicken, kosher salt, potatoes, rosemary, red wine vinegar"},{"name":"Easy and Quick Halushki","prod_description":"This Polish dish appeals to the whole family!","price":12.98,"quantity":5,"image_file":"/images/halushki.png","ingredients":"bacon, onion, egg noodles, cabbage, salt, black pepper"},{"name":"Peach Pork Picante","prod_description":"Salsa, seasoning, pork, and peach preserves","price":14.99,"quantity":10,"image_file":"/images/peach_pork_picante.png","ingredients":"pork, taco seasoning mix, salsa, peach preserves"},{"name":"Easy Breaded Shrimp","prod_description":"A hit with kids and adults alike","price":19.99,"quantity":30,"image_file":"/images/easy_breaded_shrimp.png","ingredients":"vegetable oil, shrimp, egg, bread crumbs"},{"name":"Cabbage Balushka or Cabbage and Noodles","prod_description":"Cabbage, onions, and egg noodles cooked in butter","price":9.99,"quantity":2,"image_file":"/images/cabbage_balushka.png","ingredients":"egg noodles, butter, onion, cabbage, salt, black pepper"},{"name":"Roasted Chicken with Lemon and Rosemary","prod_description":"Whole chicken cooked with lemons, garlic, and rosemary","price":11.99,"quantity":25,"image_file":"/images/roasted_chicken_lemon_rosemary.png","ingredients":"chicken, onion, lemon, garlic, rosemary, olive oil, salt, black pepper"},{"name":"Sheet Pan Shrimp Fajitas","prod_description":"Easy shrimp fajitas","price":15.99,"quantity":10,"image_file":"/images/sheet_pan_shrimp_fajitas.png","ingredients":"fajita seasoning, olive oil, shrimp, red bell pepper, yellow bell pepper, red onion, jalapeno pepper"},{"name":"Fettucine Alfredo with Ham","prod_description":"Fettucine alfredo with ham","price":12.99,"quantity":15,"image_file":"/images/fettucine_alfredo_with_ham.png","ingredients":"pasta, butter, cooked ham, heavy cream, Parmesan cheese"},{"name":"Pulled Pork Barbeque","prod_description":"Pork ribs along with pork loin. Serve with a baked potatoes or bun","price":12.99,"quantity":30,"image_file":"/images/pulled_pork_barbeque.png","ingredients":"barbeque sauce, dry onion soup mix, pork"},{"name":"Tender Slow Cooked Pork Roast","prod_description":"Falls off the bone!","price":29.99,"quantity":23,"image_file":"/images/slow_cooked_pork_roast.png","ingredients":"pork, tomato sauce, soy sauce, white sugar, ground mustard"},{"name":"Roasted Carrot and Fennel Pork","prod_description":"Pork, served deliciously.","price":19.95,"quantity":14,"image_file":"/images/roasted_carrot_and_fennel_pork.png","ingredients":"pork, honey mustard, thyme, fennel bulbs, carrot, onion, salt, black pepper"},{"name":"Slow Cooked Turkey Breast with Gravy","prod_description":"Delicious gravy with super moist turkey breast","price":12.99,"quantity":25,"image_file":"/images/slow_cooked_turkey_breast.png","ingredients":"turkey, cream of mushroom soup, Cheddar cheese soup"},{"name":"Broiled Spanish Mackerel","prod_description":"Mackerel simple and tasty","price":19.99,"quantity":20,"image_file":"/images/broiled_Spanish_mackerel.png","ingredients":"Spanish mackerel, olive oil, paprika, salt, black pepper, lemon"},{"name":"Salsa Verde Pork","prod_description":"Pork with Salsa Verde. Also, excellent for leftovers","price":19.99,"quantity":5,"image_file":"/images/salsa_verde_pork.png","ingredients":"canola oil, pork, green salsa"},{"name":"Chicken, Apple, and Brussels Sprout Sheet Pan Dinner","prod_description":"Flavors of fall. Serve alone or with rice or salad","price":18.99,"quantity":20,"image_file":"/images/chicken_apple_brussels_sprout.png","ingredients":"Brussels sprouts, apple, pancetta, olive oil, rosemary, chicken, salt, black pepper"},{"name":"Bucatini Cacio e Pepe - Roman Sheep Herders Pasta","prod_description":"Pasta, cheese, and pepper","price":12.99,"quantity":20,"image_file":"/images/bucatini_cacio_e_pepe.png","ingredients":"salt, bucatini, Pecorino Romano cheese, black pepper"},{"name":"Jackfruit Pulled \'Pork\'","prod_description":"Vegetarian pork.","price":23.95,"quantity":6,"image_file":"/images/jackfruit_pulled_pork.png","ingredients":"olive oil, Vidalia onion, garlic, green jackfruit, barbeque sauce"},{"name":"Taco-Seasoned Salmon","prod_description":"Even if you don\'t like fish, you\'ll enjoy this salmon","price":14.99,"quantity":12,"image_file":"/images/taco_seasoned_salmon.png","ingredients":"vegetable oil, Italian-seasoned bread crumbs, taco seasoning, salmon"},{"name":"Prosciutto and Asparagus Pasta","prod_description":"Prosciutto-wrapped asparagus is a classic appetizer. With pasta, it becomes dinner","price":24.99,"quantity":20,"image_file":"/images/prosciutto_and_asparagus_pasta","ingredients":"asparagus, prosciutto, olive oil, green onions, linguine"},{"name":"Sheet Pan Vegetable Dinner with Feta","prod_description":"Great with bread and salad","price":14.99,"quantity":25,"image_file":"/images/vegetable_dinner_with_feta.png","ingredients":"olive oil, zucchini, carrots, red bell peppers, potatoes, tomatoes, black olives, green onions, garlic, oregano, thyme, salt, black pepper, rosemary, bay leaves, feta cheese"},{"name":"Vegetarian Sheet Pan Dinner with Chickpeas and Veggies","prod_description":"Delicious vegetarian choice for dinner","price":14.99,"quantity":20,"image_file":"/images/vegetarian_dinner_chickpeas_veggies.png","ingredients":"chickpeas, butternut squash, onion, sweet potato, carrots, potatoes, vegetable oil, salt, black pepper, onion powder, garlic powder, fennel seeds, sage"},{"name":"Mac and Cheese","prod_description":"Classic macaroni and cheese.","price":9.99,"quantity":40,"image_file":"/images/macaroni_and_cheese.png","ingredients":"water, macaroni, butter, all-purpose flour, milk, heavy whipping cream, Worcestershire sauce, black pepper, Cheddar cheese, panko bread crumbs, Italian seasoning, garlic salt"},{"name":"Baked Old Bay Salmon","prod_description":"Salmon with an Old Bay seasoning twist","price":18.99,"quantity":20,"image_file":"/images/baked_old_bay_salmon.png","ingredients":"salmon, mayonnaise, seafood seasoning"},{"name":"Chicken Nachos with Refried Beans","prod_description":"Nachos with refried beans.","price":11.99,"quantity":17,"image_file":"/images/chicken_nachos_refried_beans.png","ingredients":"tortilla chips, refried beans, chicken, jalapeno peppers, Cheddar cheese"},{"name":"Roasted Sausage and Vegetables Dinner","prod_description":"Roasted sausage and vegetables, cooked just the way you like them","price":14.99,"quantity":30,"image_file":"/images/roasted_sausage_vegetables_dinner","ingredients":"olive oil, pork sausage, potatoes, onion, yellow bell pepper, orange bell pepper, red bell pepper, zucchini, oregano, salt, black pepper"},{"name":"Broiled Lemon-Pepper Tilapia","prod_description":"Broiled lemon-pepper tilapia","price":16.99,"quantity":15,"image_file":"/images/broiled_lemon_pepper_tilapia.png","ingredients":"tilapia, parsley, lemon-pepper seasoning, salted butter, bread crumbs"},{"name":"Pineapple BBQ Pulled Pork","prod_description":"Pineapple BBQ Pulled Pork","price":21.99,"quantity":40,"image_file":"/images/pineapple_bbq_pulled_pork.png","ingredients":"pork, chicken broth, honey barbeque sauce, onion, pineapple"},{"name":"Honey-Chipotle Chicken","prod_description":"Shredded chicken, black beans, with honey-chipotle sauce","price":17.99,"quantity":40,"image_file":"/images/honey_chipotle_chicken.png","ingredients":"honey, garlic, chipotle peppers in adobo sauce, chicken, black beans"},{"name":"Baked Spaghetti","prod_description":"Delicious with crusty garlic bread","price":12.99,"quantity":15,"image_file":"/images/baked_spaghetti.png","ingredients":"butter, onion, kosher salt, Italian seasoning, garlic, beef, marinara sauce, basil, spaghetti, heavy cream, Parmesan cheese, mozzarella cheese"}]');
 
 /***/ })
 
@@ -707,7 +110,7 @@ module.exports = JSON.parse('[{"name":"Blue Buffalo Life Protection Formula Pupp
 var __webpack_require__ = require("../webpack-runtime.js");
 __webpack_require__.C(exports);
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-var __webpack_exports__ = (__webpack_exec__(1588));
+var __webpack_exports__ = (__webpack_exec__("./pages/products.js"));
 module.exports = __webpack_exports__;
 
 })();
