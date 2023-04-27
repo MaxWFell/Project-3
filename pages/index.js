@@ -42,7 +42,7 @@ export default function Home() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div style={{
-                backgroundColor: "#000000",
+                backgroundColor: "#adc178",
             }}>
                 <div className='container'>
                     <div className='py-5 text-center text-light'>
@@ -68,12 +68,12 @@ export default function Home() {
                 </div>
             </div>
             <div style={{
-                backgroundColor: "#000000",
+                backgroundColor: "#adc178",
             }} className='py-5'>
             </div>
             <div style={{
-                // linear gradient from #0073ff to #00c4ff
-                backgroundImage: "linear-gradient(90deg, #0073ff 0%, #00c4ff 100%)",
+                // linear gradient from #adc178 to #adc179
+                backgroundImage: "linear-gradient(90deg, #adc178 0%, #adc179 100%)",
             }}>
                 <div className='container'>
                     <div className='row align-items-center'>
@@ -92,7 +92,7 @@ export default function Home() {
                 </div>
             </div>
             <div style={{
-                backgroundImage: "linear-gradient(90deg, #0073ff 0%, #00c4ff 100%)",
+                backgroundImage: "linear-gradient(90deg, #adc178 0%, #adc179 100%)",
             }} className='py-5'>
             </div>
             <div>

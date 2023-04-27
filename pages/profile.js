@@ -174,7 +174,7 @@ function profile() {
     if (user) {
         return (
             <div style={{
-                backgroundColor: "#000000",
+                backgroundColor: "#adc178",
                 minHeight: "100vh",
             }}>
                 <div className='container'>

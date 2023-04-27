@@ -97,8 +97,8 @@ function products({ products }) {
 
     return (<>
         <div style={{
-            // linear gradient from #0073ff to #00c4ff
-            backgroundImage: "linear-gradient(90deg, #0073ff 0%, #00c4ff 100%)",
+            // linear gradient from #adc178 to #adc179
+            backgroundImage: "linear-gradient(90deg, #adc178 0%, #adc179 100%)",
         }}>
             {/* if loading */}
             {loading ? (

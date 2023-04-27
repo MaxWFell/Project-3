@@ -37,7 +37,7 @@ function Header() {
     return (
         <>
             <nav style={{
-                backgroundColor: "#1c1917",
+                backgroundColor: "#a98467",
             }} className="navbar navbar-expand-lg navbar-light py-3 px-4">
                 <a className="navbar-brand" href="/">
                     <img src="/images/logo.png" width="130" height="130" className="d-inline-block align-top" alt="" loading="lazy" />
