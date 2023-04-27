@@ -8,7 +8,6 @@ function Product({ product, addToCart, addToWishlist}) {
                 <div className="col-md-6">
                     <h4 className="font-weight-bold">{product.name}</h4>
                     <p className="text-muted">{product.description}</p>
-                    <p className="text-muted text-secondary">Best for {product.age_preferred} year old pets</p>
                     <p className="text-muted">{product.quantity} in stock</p>
                 </div>
                 <div className="col-md-3">
