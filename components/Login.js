@@ -78,7 +78,7 @@ function Login() {
 
     return (<>
         <div style={{
-            backgroundColor: "#000000",
+            backgroundColor: "#dde5b6",
             height: "100vh",
         }} className="pt-5">
             <div className="container pt-5">
