@@ -37,10 +37,10 @@ function Header() {
     return (
         <>
             <nav style={{
-                backgroundColor: "#1c1917",
+                backgroundColor: "#a98467",
             }} className="navbar navbar-expand-lg navbar-light py-3 px-4">
                 <a className="navbar-brand" href="/">
-                    <img src="/images/Top_foodies_logo.png" width="130" height="130" className="d-inline-block align-top" alt="" loading="lazy" />
+                <img src="./images/Top_foodies_logo.png" width="130" height="130" className="d-inline-block align-top" alt="" loading="lazy" />
                 </a>
                 <button className="navbar-toggler text-light" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     ...
