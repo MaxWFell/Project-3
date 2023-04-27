@@ -1,7 +1,7 @@
 function Footer() {
     return (<>
         <footer style={{
-            backgroundColor: "#1c1917",
+            backgroundColor: "#a98467",
         }} className="footer py-4 fixed-bottom text-light">
             <div className="text-center">
                 <p>Copyright {new Date().getFullYear()}. All rights reserved</p>
