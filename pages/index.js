@@ -46,7 +46,7 @@ export default function Home() {
                         <p className='lead'>
                             Whether its a diet, cheat night or a date night we got something for everyone.
                         </p>
-                        <button className='btn btn-primary btn-lg' onClick={() => router.push('/products')}>Shop Now</button>
+                        <button className='btn btn-secondary btn-lg' onClick={() => router.push('/products')}>Shop Now</button>
                     </div>
                 </div>
             </div>

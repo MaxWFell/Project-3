@@ -1,8 +1,8 @@
 function Product({ product, addToCart, addToWishlist}) {
     return (<>
-        <div className="card p-4 my-3">
+        <div className="card p-4 my-3 shadow p-3">
             <div className="row">
-                <div className="col-md-3">
+                <div className="col-md-3 shadow p-1">
                     <img src={product.image} className="img-fluid" />
                 </div>
                 <div className="col-md-6">
