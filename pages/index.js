@@ -54,7 +54,7 @@ export default function Home() {
                 <div className='container py-5'>
                     <div className='row align-items-center'>
                         <div className='col-md-6'>
-                            <img src='/images/rosemary_chicken_with_potatoes.png' className='img-fluid' />
+                            <img src='/images/food_packaged.jpg' className='img-fluid' />
                         </div>
                         <div className='col-md-6'>
                             <h4 className='font-weight-bold'>Everything comes fresh and packaged with care</h4>
@@ -74,7 +74,7 @@ export default function Home() {
                 <div className='container'>
                     <div className='row align-items-center'>
                         <div className='col-md-6'>
-                            <img src='/images/sheet_pan_shrimp_fajitas.png' width="400px" hspace="10px" vspace="10px" className='img-fluid rounded-sm mt-n3' />
+                            <img src='/images/sheet_pan_shrimp_fajitas.png' width="500px" vspace="31px" className='img-fluid rounded-sm mt-n3' />
                         </div>
                         <div className='col-md-6 text-light'>
                             <h4 className='font-weight-bold'>Sign up for Additional Savings!</h4>
