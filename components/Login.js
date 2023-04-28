@@ -84,7 +84,7 @@ function Login() {
             <div className="container pt-5">
                 <div className="row">
                     <div className="col-md-6 pt-4">
-                        <div className="card p-5 m-3 m-md-5 rounded-lg h-100">
+                        <div className="card p-5 m-3 m-md-5 rounded-lg h-100 shadow p-3">
                             <h1>Log In</h1>
                             <form>
                                 <div className="form-group">
@@ -95,12 +95,12 @@ function Login() {
                                     <label htmlFor="password">Password</label>
                                     <input type="password" className="form-control" id="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
                                 </div>
-                                <button type="submit" className="btn btn-primary" onClick={handleLogin}>Log In</button>
+                                <button type="submit" className="btn btn-secondary" onClick={handleLogin}>Log In</button>
                             </form>
                         </div>
                     </div>
                     <div className="col-md-6 pt-4">
-                        <div className="card p-5 m-3 m-md-5 rounded-lg h-100">
+                        <div className="card p-5 m-3 m-md-5 rounded-lg h-100 shadow p-3">
                             <h1>Sign Up</h1>
                             <form>
                                 <div className="form-group">
@@ -115,7 +115,7 @@ function Login() {
                                     <label htmlFor="password">Password</label>
                                     <input type="password" className="form-control" id="password" placeholder="Password" onChange={e => setRegPassword(e.target.value)} />
                                 </div>
-                                <button type="submit" className="btn btn-primary" onClick={handleRegister}>Sign Up</button>
+                                <button type="submit" className="btn btn-secondary" onClick={handleRegister}>Sign Up</button>
                             </form>
                         </div>
                     </div>

@@ -18,7 +18,7 @@ function support() {
                             <label htmlFor="message">Message</label>
                             <textarea className="form-control" id="message" rows="3"></textarea>
                         </div>
-                        <button type="submit" className="btn btn-primary">Submit</button>
+                        <button type="submit" className="btn btn-secondary">Submit</button>
                     </form>
                 </div>
             </div>
