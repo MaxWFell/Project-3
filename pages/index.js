@@ -14,22 +14,18 @@ export default function Home() {
         {
             name: 'Max Fell',
             role: 'Backend',
-            imagePath: '/images/M.png'
         },
         {
             name: 'Rose Black',
             role: 'Backend',
-            imagePath: '/images/R.png'
         },
         {
             name: 'Frankie Sanchez',
             role: 'Frontend',
-            imagePath: '/images/M.png'
         },
         {
             name: 'Badawi Shahata',
             role: 'Frontend',
-            imagePath: '/images/Z.png'
         }
     ]
 
@@ -58,7 +54,7 @@ export default function Home() {
                 <div className='container py-5'>
                     <div className='row align-items-center'>
                         <div className='col-md-6'>
-                            <img src='/images/cat-eating.jpg' className='img-fluid' />
+                            <img src='/images/rosemary_chicken_with_potatoes.png' className='img-fluid' />
                         </div>
                         <div className='col-md-6'>
                             <h4 className='font-weight-bold'>Everything comes fresh and packaged with care</h4>
@@ -78,7 +74,7 @@ export default function Home() {
                 <div className='container'>
                     <div className='row align-items-center'>
                         <div className='col-md-6'>
-                            <img src='/images/macaroni_and_cheese.png' width="400px" hspace="10px" vspace="10px" className='img-fluid rounded-sm mt-n3' />
+                            <img src='/images/sheet_pan_shrimp_fajitas.png' width="400px" hspace="10px" vspace="10px" className='img-fluid rounded-sm mt-n3' />
                         </div>
                         <div className='col-md-6 text-light'>
                             <h4 className='font-weight-bold'>Sign up for Additional Savings!</h4>
