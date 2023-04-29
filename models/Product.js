@@ -10,16 +10,16 @@ const productSchema = new mongoose.Schema({
         required: true,
     },
     price: {
-        type: Decimal128,
+        type: Number,
         required: true,
     },
     quantity: {
-        type: Integer,
+        type: Number,
         required: true,
     },
     image_file: {
         type: String,
-        require: true,
+        required: true,
     },
     ingredients: {
         type: String,
