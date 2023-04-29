@@ -7,7 +7,7 @@ function Team({ members }) {
             <p className='text-center lead'>Helping others to treat themselves with something special</p>
             <div className='row mt-5'>
                 {members.map((member, index) => (
-                    <div key={index} className='col-md-2 px-4 text-center'>
+                    <div key={index} className='col-md-5 px-4 text-center'>
                         <TeamMate name={member.name} role={member.role} imagePath={member.imagePath} />
                     </div>
                 ))}

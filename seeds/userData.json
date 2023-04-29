@@ -1,15 +1,5 @@
 [
   {
-    "name": "Zeus",
-    "password": "password1",
-    "email": "zeus@hotmail.com"
-  },
-  {
-    "name": "Gerardo",
-    "password": "password2",
-    "email": "gerardo@yahoo.com"
-  },
-  {
     "name": "Rose",
     "password": "password3",
     "email": "rose@gmail.com"
@@ -18,15 +8,5 @@
     "name": "Max",
     "password": "password4",
     "email": "max@hotmail.com"
-  },
-  {
-    "name": "Manny",
-    "password": "password5",
-    "email": "manny@gmail.com"
-  },
-   {
-    "name": "Adrian",
-    "password": "password6",
-    "email": "Adrian@gmail.com"
   }
 ]
