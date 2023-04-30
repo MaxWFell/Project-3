@@ -35,20 +35,10 @@
       "static/chunks/main.js",
       "static/chunks/pages/products.js"
     ],
-    "/profile": [
+    "/wishlist": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/profile.js"
-    ],
-    "/services": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/services.js"
-    ],
-    "/support": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/support.js"
+      "static/chunks/pages/wishlist.js"
     ]
   },
   "ampFirstPages": []
