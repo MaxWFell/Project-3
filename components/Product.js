@@ -9,9 +9,10 @@ function Product({ product, addToCart, addToWishlist}) {
                     <h4 className="font-weight-bold">{product.name}</h4>
                     <p className="text-muted">{product.description}</p>
                     <p className="text-muted">{product.quantity} in stock</p>
+                    <p className="text-muted">{product.ingredients}</p>
                 </div>
                 <div className="col-md-3">
-                    <h3 className="font-weight-bold text-success">$20.00</h3>
+                    <h3 className="font-weight-bold text-success">${product.price}</h3>
                     <button className="btn btn-dark btn-block" onClick={() => addToCart(product.id)}>
                         Add to Cart
                     </button>

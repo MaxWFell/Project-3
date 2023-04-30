@@ -44,7 +44,7 @@ export default function Home() {
                     <div className='py-5 text-center text-light'>
                         <p className='display-4 font-weight-bold ' >Giving you new experiences, one plate at a time!</p>
                         <p className='lead'>
-                            Whether its a diet, cheat night or a date night we got something for everyone.
+                            Whether it's a diet, cheat night or a date night we got something for everyone.
                         </p>
                         <button className='btn btn-secondary btn-lg' onClick={() => router.push('/products')}>Shop Now</button>
                     </div>

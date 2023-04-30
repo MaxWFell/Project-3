@@ -166,7 +166,7 @@ export async function getServerSideProps(context) {
             price: product.price,
             description: product.prod_description,
             quantity: product.quantity,
-    
+            ingredients: product.ingredients,
         }
     });
 
