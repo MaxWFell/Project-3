@@ -42,11 +42,16 @@ export default function Home() {
             }}>
                 <div className='container'>
                     <div className='py-5 text-center text-light'>
+                    <div className='col-md-6 custom-img-container float-right'>
+                        <img src='/images/food_collage.jpg' className='img-fluid float-right' />
+                    </div>
+                    <div className='col-md-7'>
                         <p className='display-4 font-weight-bold ' >Giving you new experiences, one plate at a time!</p>
                         <p className='lead'>
-                            Whether it's a diet, cheat night or a date night we got something for everyone.
+                            Whether its a diet, cheat night or a date night we got something for everyone.
                         </p>
                         <button className='btn btn-secondary btn-lg' onClick={() => router.push('/products')}>Shop Now</button>
+                        </div>
                     </div>
                 </div>
             </div>
