@@ -114,7 +114,7 @@ function products({ products }) {
                                 {hasParams ? (
                                     <h1 className="py-4 text-light">Search results for "{router.query.q}"</h1>
                                 ) : (
-                                <h1 className="py-4 text-light">Shop stuff for your pets!</h1>
+                                <h1 className="py-4 text-light">Yummy for the Tummy!</h1>
                                 )}
                             </div>
                             <div className="float-right">
